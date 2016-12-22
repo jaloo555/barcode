@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { Box, Text } from 'react-desktop/macOs';
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-export default class extends Component {
-  render() {
+class App extends React.Component {
+  render () {
     return (
-      <Box label="Box" padding="10px 30px">
-        <Text>Some text...</Text>
-      </Box>
-    );
+      <h1>Minimalistic Electron React Boilerplate Code</h1>
+    )
   }
 }
+
+ReactDOM.render(<App/>,document.getElementById('app'))
