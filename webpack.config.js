@@ -1,4 +1,5 @@
 module.exports={
+  target: 'electron',
   entry:'./renderer.js',
   output:{
     filename:'./renderer-bundle.js'

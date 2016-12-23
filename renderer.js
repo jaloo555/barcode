@@ -1,10 +1,14 @@
-import React from 'react'
+import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
+//import { Box, Text } from 'react-desktop/macOs';
+import AppContainer from './appcontainer'
 
 class App extends React.Component {
   render () {
-    return (<h1>Minimalistic Electron React Boilerplate Code HEY</h1>);
-  }
+    return (
+			<AppContainer />
+		)
+ 	}
 }
 
 
