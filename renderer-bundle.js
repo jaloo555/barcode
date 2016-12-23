@@ -79,7 +79,7 @@
 	      return _react2.default.createElement(
 	        'h1',
 	        null,
-	        'Minimalistic Electron React Boilerplate Code'
+	        'Minimalistic Electron React Boilerplate Code HEY'
 	      );
 	    }
 	  }]);
