@@ -22,23 +22,33 @@ class IDForm extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-          value: ''
+          id: '',
+          amount: ''
       };
 
-      this.handleChange = this.handleChange.bind(this);
+      this.handleIDChange = this.handleIDChange.bind(this);
+      this.handleAmountChange = this.handleAmountChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-      this.setState({value: event.target.value});
+  handleIDChange(event) {
+      this.setState({id: event.target.value});
+    // console.log('student ID '+event.target.value);
+  }
+
+  handleAmountChange(event) {
+    this.setState({amount: event.target.value});
+    // console.log('Charging ' + event.target.value);
   }
 
   handleSubmit(event) {
       // TODO: use regex to check if it is a valid id number
       event.preventDefault();
-      console.log('ID Scanned: ' + this.state.value);
-      var scannedId = this.state.value;
-      ipc.send('scannedId', scannedId);
+      console.log('ID Scanned: ' + this.state.id + "\nCharging student $" + this.state.amount);
+      var scannedId = this.state.id;
+      var chargeAmount = this.state.amount;
+      var dataDict = {id: scannedId, amount: chargeAmount};
+      ipc.send('scannedId', dataDict);
   }
 
   render() {
@@ -47,9 +57,16 @@ class IDForm extends React.Component {
           <label>
             <input
               type="text"
-              value={this.state.value}
-              onChange={this.handleChange}
-              placeholder="Scan Student ID"/>
+              value={this.state.id}
+              onChange={this.handleIDChange}
+              placeholder="Scan Student ID"
+              />
+            <input
+              type="text"
+              value={this.state.amount}
+              onChange={this.handleAmountChange}
+              placeholder="Amount"
+              />
           </label>
           <button type="submit">Submit</button>
         </form>

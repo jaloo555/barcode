@@ -56,10 +56,6 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _fs = __webpack_require__(177);
-
-	var _fs2 = _interopRequireDefault(_fs);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -68,109 +64,74 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	// Necessary for creating pop-up window
-	var BrowserWindow = __webpack_require__(178).remote.BrowserWindow;
-	var path = __webpack_require__(179);
-
-	// Communication between 2 render processes
+	// Inter-window Communication
 	var ipc = __webpack_require__(178).ipcRenderer;
 
-	var App = function (_React$Component) {
-	    _inherits(App, _React$Component);
+	ipc.on('scannedId', function (event, data) {
+	  console.log('received', data['amount']);
+	  // this.state.id = data['id'];
+	  // this.state.amount = data['amount'];
+	});
 
-	    function App(props) {
-	        _classCallCheck(this, App);
+	var receivedData;
 
-	        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	var validifyContainer = function (_React$Component) {
+	  _inherits(validifyContainer, _React$Component);
+
+	  function validifyContainer(props) {
+	    _classCallCheck(this, validifyContainer);
+
+	    var _this = _possibleConstructorReturn(this, (validifyContainer.__proto__ || Object.getPrototypeOf(validifyContainer)).call(this, props));
+
+	    _this.state = {
+	      id: '',
+	      amount: ''
+	    };
+
+	    _this.componentDidMount = _this.componentDidMount.bind(_this);
+	    return _this;
+	  }
+
+	  // componentDidMount(){
+	  //   ipc.on('scannedId', function(event,data){
+	  //     console.log('received',data['amount']);
+	  //     this.state.id = data['id'];
+	  //     this.state.amount = data['amount'];
+	  //   });
+	  //
+	  //   console.log(triggered);
+	  // }
+
+	  _createClass(validifyContainer, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'ID:'
+	        ),
+	        _react2.default.createElement('break', null),
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Amount:'
+	        )
+	      );
 	    }
+	  }]);
 
-	    _createClass(App, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(IDForm, null);
-	        }
-	    }]);
-
-	    return App;
+	  return validifyContainer;
 	}(_react2.default.Component);
 
-	var IDForm = function (_React$Component2) {
-	    _inherits(IDForm, _React$Component2);
+	var cancelButton = document.getElementById("cancel-action");
+	cancelButton.addEventListener("click", function () {
+	  ipc.send('cancel-action');
+	}, false);
 
-	    function IDForm(props) {
-	        _classCallCheck(this, IDForm);
-
-	        var _this2 = _possibleConstructorReturn(this, (IDForm.__proto__ || Object.getPrototypeOf(IDForm)).call(this, props));
-
-	        _this2.state = {
-	            id: '',
-	            amount: ''
-	        };
-
-	        _this2.handleIDChange = _this2.handleIDChange.bind(_this2);
-	        _this2.handleAmountChange = _this2.handleAmountChange.bind(_this2);
-	        _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
-	        return _this2;
-	    }
-
-	    _createClass(IDForm, [{
-	        key: 'handleIDChange',
-	        value: function handleIDChange(event) {
-	            this.setState({ id: event.target.value });
-	            // console.log('student ID '+event.target.value);
-	        }
-	    }, {
-	        key: 'handleAmountChange',
-	        value: function handleAmountChange(event) {
-	            this.setState({ amount: event.target.value });
-	            // console.log('Charging ' + event.target.value);
-	        }
-	    }, {
-	        key: 'handleSubmit',
-	        value: function handleSubmit(event) {
-	            // TODO: use regex to check if it is a valid id number
-	            event.preventDefault();
-	            console.log('ID Scanned: ' + this.state.id + "\nCharging student $" + this.state.amount);
-	            var scannedId = this.state.id;
-	            var chargeAmount = this.state.amount;
-	            var dataDict = { id: scannedId, amount: chargeAmount };
-	            ipc.send('scannedId', dataDict);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'form',
-	                { onSubmit: this.handleSubmit },
-	                _react2.default.createElement(
-	                    'label',
-	                    null,
-	                    _react2.default.createElement('input', {
-	                        type: 'text',
-	                        value: this.state.id,
-	                        onChange: this.handleIDChange,
-	                        placeholder: 'Scan Student ID'
-	                    }),
-	                    _react2.default.createElement('input', {
-	                        type: 'text',
-	                        value: this.state.amount,
-	                        onChange: this.handleAmountChange,
-	                        placeholder: 'Amount'
-	                    })
-	                ),
-	                _react2.default.createElement(
-	                    'button',
-	                    { type: 'submit' },
-	                    'Submit'
-	                )
-	            );
-	        }
-	    }]);
-
-	    return IDForm;
-	}(_react2.default.Component);
-
-	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));
+	_reactDom2.default.render(_react2.default.createElement('validifyContainer', null), document.getElementById('show-app'));
 
 /***/ },
 /* 1 */
@@ -21323,22 +21284,11 @@
 	module.exports = ReactDOMInvalidARIAHook;
 
 /***/ },
-/* 177 */
-/***/ function(module, exports) {
-
-	module.exports = require("fs");
-
-/***/ },
+/* 177 */,
 /* 178 */
 /***/ function(module, exports) {
 
 	module.exports = require("electron");
-
-/***/ },
-/* 179 */
-/***/ function(module, exports) {
-
-	module.exports = require("path");
 
 /***/ }
 /******/ ]);

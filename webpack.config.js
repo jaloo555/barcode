@@ -1,8 +1,11 @@
 module.exports={
   target: 'electron',
-  entry:'./renderer.js',
+  entry:{
+    'renderer-bundle':'./renderer.js',
+    'show-bundle':'./show.js'
+  },
   output:{
-    filename:'./renderer-bundle.js'
+    filename:"[name].js"
   },
   node: {
     __dirname: false,
