@@ -68,77 +68,103 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	// Necessary for creating pop-up window
+	var BrowserWindow = __webpack_require__(178).remote.BrowserWindow;
+	var path = __webpack_require__(179);
+
+	// Communication between 2 render processes
+	var ipc = __webpack_require__(178).ipcRenderer;
+
 	var App = function (_React$Component) {
-	  _inherits(App, _React$Component);
+	    _inherits(App, _React$Component);
 
-	  function App(props) {
-	    _classCallCheck(this, App);
+	    function App(props) {
+	        _classCallCheck(this, App);
 
-	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
-	  }
-
-	  _createClass(App, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(IDForm, null);
+	        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	    }
-	  }]);
 
-	  return App;
+	    _createClass(App, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(IDForm, null);
+	        }
+	    }]);
+
+	    return App;
 	}(_react2.default.Component);
 
+	function newWindow() {
+	    var modalPath = path.join('file://', __dirname, './show.html');
+	    var win = new BrowserWindow({
+	        width: 400,
+	        height: 320
+	    });
+	    win.on('close', function () {
+	        win = null;
+	    });
+	    win.loadURL(modalPath);
+	    win.openDevTools();
+	    win.show();
+	}
+
 	var IDForm = function (_React$Component2) {
-	  _inherits(IDForm, _React$Component2);
+	    _inherits(IDForm, _React$Component2);
 
-	  function IDForm(props) {
-	    _classCallCheck(this, IDForm);
+	    function IDForm(props) {
+	        _classCallCheck(this, IDForm);
 
-	    var _this2 = _possibleConstructorReturn(this, (IDForm.__proto__ || Object.getPrototypeOf(IDForm)).call(this, props));
+	        var _this2 = _possibleConstructorReturn(this, (IDForm.__proto__ || Object.getPrototypeOf(IDForm)).call(this, props));
 
-	    _this2.state = { value: '' };
+	        _this2.state = {
+	            value: ''
+	        };
 
-	    _this2.handleChange = _this2.handleChange.bind(_this2);
-	    _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
-	    return _this2;
-	  }
-
-	  _createClass(IDForm, [{
-	    key: 'handleChange',
-	    value: function handleChange(event) {
-	      this.setState({ value: event.target.value });
+	        _this2.handleChange = _this2.handleChange.bind(_this2);
+	        _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
+	        return _this2;
 	    }
-	  }, {
-	    key: 'handleSubmit',
-	    value: function handleSubmit(event) {
-	      alert('ID Scanned: ' + this.state.value);
-	      event.preventDefault();
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'form',
-	        { onSubmit: this.handleSubmit },
-	        _react2.default.createElement(
-	          'label',
-	          null,
-	          _react2.default.createElement('input', {
-	            type: 'text',
-	            value: this.state.value,
-	            onChange: this.handleChange,
-	            placeholder: 'Scan Student ID'
-	          })
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          { type: 'submit' },
-	          'Submit'
-	        )
-	      );
-	    }
-	  }]);
 
-	  return IDForm;
+	    _createClass(IDForm, [{
+	        key: 'handleChange',
+	        value: function handleChange(event) {
+	            this.setState({ value: event.target.value });
+	        }
+	    }, {
+	        key: 'handleSubmit',
+	        value: function handleSubmit(event) {
+	            // TODO: use regex to check if it is a valid id number
+	            event.preventDefault();
+	            console.log('ID Scanned: ' + this.state.value);
+	            var scannedId = this.state.value;
+	            ipc.send('scannedId', scannedId);
+	            newWindow();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'form',
+	                { onSubmit: this.handleSubmit },
+	                _react2.default.createElement(
+	                    'label',
+	                    null,
+	                    _react2.default.createElement('input', {
+	                        type: 'text',
+	                        value: this.state.value,
+	                        onChange: this.handleChange,
+	                        placeholder: 'Scan Student ID' })
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    { type: 'submit' },
+	                    'Submit'
+	                )
+	            );
+	        }
+	    }]);
+
+	    return IDForm;
 	}(_react2.default.Component);
 
 	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));
@@ -21298,6 +21324,18 @@
 /***/ function(module, exports) {
 
 	module.exports = require("fs");
+
+/***/ },
+/* 178 */
+/***/ function(module, exports) {
+
+	module.exports = require("electron");
+
+/***/ },
+/* 179 */
+/***/ function(module, exports) {
+
+	module.exports = require("path");
 
 /***/ }
 /******/ ]);

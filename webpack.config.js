@@ -4,6 +4,10 @@ module.exports={
   output:{
     filename:'./renderer-bundle.js'
   },
+  node: {
+    __dirname: false,
+    __filename: false
+  },
   module: {
     loaders: [
       {
