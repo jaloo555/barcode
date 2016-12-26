@@ -18,20 +18,6 @@ class App extends React.Component {
     }
 }
 
-function newWindow() {
-  const modalPath = path.join('file://', __dirname, './show.html')
-      let win = new BrowserWindow({
-          width: 400,
-          height: 320
-      })
-      win.on('close', function() {
-          win = null
-      })
-      win.loadURL(modalPath)
-      win.openDevTools();
-      win.show()
-}
-
 class IDForm extends React.Component {
   constructor(props) {
       super(props);
@@ -52,8 +38,7 @@ class IDForm extends React.Component {
       event.preventDefault();
       console.log('ID Scanned: ' + this.state.value);
       var scannedId = this.state.value;
-      ipc.send('scannedId', scannedId);
-      newWindow();
+      // ipc.send('scannedId', scannedId);
   }
 
   render() {

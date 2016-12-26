@@ -14,8 +14,10 @@
     // You can also require other files to run in this process
     // require('./renderer-bundle.js')
     const ipc = require('electron').ipcRenderer
-    ipcRenderer.on('scannedId', function(s){
-      console.log(s)
+
+    ipc.on('scannedId', function(s){
+      console.log(s);
+      console.log('received');
     });
   </script>
 </html>

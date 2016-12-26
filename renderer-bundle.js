@@ -94,20 +94,6 @@
 	    return App;
 	}(_react2.default.Component);
 
-	function newWindow() {
-	    var modalPath = path.join('file://', __dirname, './show.html');
-	    var win = new BrowserWindow({
-	        width: 400,
-	        height: 320
-	    });
-	    win.on('close', function () {
-	        win = null;
-	    });
-	    win.loadURL(modalPath);
-	    win.openDevTools();
-	    win.show();
-	}
-
 	var IDForm = function (_React$Component2) {
 	    _inherits(IDForm, _React$Component2);
 
@@ -137,8 +123,7 @@
 	            event.preventDefault();
 	            console.log('ID Scanned: ' + this.state.value);
 	            var scannedId = this.state.value;
-	            ipc.send('scannedId', scannedId);
-	            newWindow();
+	            // ipc.send('scannedId', scannedId);
 	        }
 	    }, {
 	        key: 'render',
