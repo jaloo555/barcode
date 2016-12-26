@@ -4,51 +4,51 @@ import ReactDOM from 'react-dom'
 // Inter-window Communication
 const ipc = require('electron').ipcRenderer
 
-ipc.on('scannedId', function(event,data){
-  console.log('received',data['amount']);
-  // this.state.id = data['id'];
-  // this.state.amount = data['amount'];
-});
+var cancelButton = document.getElementById("cancel-action");
+cancelButton.addEventListener("click", function() {
+    ipc.send('cancel-action');
+}, false)
 
-var receivedData;
+// React Component
 
-class validifyContainer extends React.Component
-{
-  constructor(props) {
-    super(props);
-    this.state = {
-        id: '',
-        amount: ''
-    };
+class CheckViewContainer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            idNum: '',
+            amountNum: ''
+        };
 
-    this.componentDidMount = this.componentDidMount.bind(this)
-  }
+        this.componentDidMount = this.componentDidMount.bind(this)
+    }
 
-  // componentDidMount(){
-  //   ipc.on('scannedId', function(event,data){
-  //     console.log('received',data['amount']);
-  //     this.state.id = data['id'];
-  //     this.state.amount = data['amount'];
-  //   });
-  //
-  //   console.log(triggered);
-  // }
+    componentDidMount() {
+        ipc.on('scannedId', (function(event,data) {
+          console.log('received', data);
+          this.setState({
+            idNum: data['id'],
+            amountNum: data['amount']
+          });
+          // this.state.idNum = data['id'];
+          // this.state.amountNum = data['amount'];
+        }).bind(this));
+    }
 
-  render() {
-    return (
-      <div>
-        <h1>ID:</h1>
-        <break/>
-        <h1>Amount:</h1>
-      </div>
-    );
+    render() {
+        return (
+            <div>
+                <h3>ID:{this.state.idNum}</h3>
+                <h3>Amount:{this.state.amountNum}</h3>
+            </div>
+        );
+    }
+}
+
+class CheckView extends React.Component{
+  render(){
+    return(<CheckViewContainer/>);
   }
 }
 
-var cancelButton  = document.getElementById("cancel-action");
-cancelButton.addEventListener("click", function() {
-  ipc.send('cancel-action');
-},false)
-
 ReactDOM.render(
-    <validifyContainer />, document.getElementById('show-app'))
+    <CheckView/>, document.getElementById('show-app'));

@@ -67,71 +67,88 @@
 	// Inter-window Communication
 	var ipc = __webpack_require__(178).ipcRenderer;
 
-	ipc.on('scannedId', function (event, data) {
-	  console.log('received', data['amount']);
-	  // this.state.id = data['id'];
-	  // this.state.amount = data['amount'];
-	});
-
-	var receivedData;
-
-	var validifyContainer = function (_React$Component) {
-	  _inherits(validifyContainer, _React$Component);
-
-	  function validifyContainer(props) {
-	    _classCallCheck(this, validifyContainer);
-
-	    var _this = _possibleConstructorReturn(this, (validifyContainer.__proto__ || Object.getPrototypeOf(validifyContainer)).call(this, props));
-
-	    _this.state = {
-	      id: '',
-	      amount: ''
-	    };
-
-	    _this.componentDidMount = _this.componentDidMount.bind(_this);
-	    return _this;
-	  }
-
-	  // componentDidMount(){
-	  //   ipc.on('scannedId', function(event,data){
-	  //     console.log('received',data['amount']);
-	  //     this.state.id = data['id'];
-	  //     this.state.amount = data['amount'];
-	  //   });
-	  //
-	  //   console.log(triggered);
-	  // }
-
-	  _createClass(validifyContainer, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          'ID:'
-	        ),
-	        _react2.default.createElement('break', null),
-	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          'Amount:'
-	        )
-	      );
-	    }
-	  }]);
-
-	  return validifyContainer;
-	}(_react2.default.Component);
-
 	var cancelButton = document.getElementById("cancel-action");
 	cancelButton.addEventListener("click", function () {
-	  ipc.send('cancel-action');
+	    ipc.send('cancel-action');
 	}, false);
 
-	_reactDom2.default.render(_react2.default.createElement('validifyContainer', null), document.getElementById('show-app'));
+	// React Component
+
+	var CheckViewContainer = function (_React$Component) {
+	    _inherits(CheckViewContainer, _React$Component);
+
+	    function CheckViewContainer(props) {
+	        _classCallCheck(this, CheckViewContainer);
+
+	        var _this = _possibleConstructorReturn(this, (CheckViewContainer.__proto__ || Object.getPrototypeOf(CheckViewContainer)).call(this, props));
+
+	        _this.state = {
+	            idNum: '',
+	            amountNum: ''
+	        };
+
+	        _this.componentDidMount = _this.componentDidMount.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(CheckViewContainer, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            ipc.on('scannedId', function (event, data) {
+	                console.log('received', data);
+	                this.setState({
+	                    idNum: data['id'],
+	                    amountNum: data['amount']
+	                });
+	                // this.state.idNum = data['id'];
+	                // this.state.amountNum = data['amount'];
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'h3',
+	                    null,
+	                    'ID:',
+	                    this.state.idNum
+	                ),
+	                _react2.default.createElement(
+	                    'h3',
+	                    null,
+	                    'Amount:',
+	                    this.state.amountNum
+	                )
+	            );
+	        }
+	    }]);
+
+	    return CheckViewContainer;
+	}(_react2.default.Component);
+
+	var CheckView = function (_React$Component2) {
+	    _inherits(CheckView, _React$Component2);
+
+	    function CheckView() {
+	        _classCallCheck(this, CheckView);
+
+	        return _possibleConstructorReturn(this, (CheckView.__proto__ || Object.getPrototypeOf(CheckView)).apply(this, arguments));
+	    }
+
+	    _createClass(CheckView, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(CheckViewContainer, null);
+	        }
+	    }]);
+
+	    return CheckView;
+	}(_react2.default.Component);
+
+	_reactDom2.default.render(_react2.default.createElement(CheckView, null), document.getElementById('show-app'));
 
 /***/ },
 /* 1 */
