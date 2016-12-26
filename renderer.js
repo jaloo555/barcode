@@ -38,7 +38,7 @@ class IDForm extends React.Component {
       event.preventDefault();
       console.log('ID Scanned: ' + this.state.value);
       var scannedId = this.state.value;
-      // ipc.send('scannedId', scannedId);
+      ipc.send('scannedId', scannedId);
   }
 
   render() {
