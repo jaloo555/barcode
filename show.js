@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
+import fs from 'fs'
 
 // Inter-window Communication
 const ipc = require('electron').ipcRenderer
@@ -29,16 +30,16 @@ class CheckViewContainer extends React.Component {
             idNum: data['id'],
             amountNum: data['amount']
           });
-          // this.state.idNum = data['id'];
-          // this.state.amountNum = data['amount'];
+          // Perform image finding inside this
         }).bind(this));
+
     }
 
     render() {
         return (
             <div>
-                <h3>ID:{this.state.idNum}</h3>
-                <h3>Amount:{this.state.amountNum}</h3>
+                <h3>ID: {this.state.idNum}</h3>
+                <h3>Amount: ${this.state.amountNum}</h3>
             </div>
         );
     }

@@ -56,6 +56,10 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
+	var _fs = __webpack_require__(177);
+
+	var _fs2 = _interopRequireDefault(_fs);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -100,8 +104,7 @@
 	                    idNum: data['id'],
 	                    amountNum: data['amount']
 	                });
-	                // this.state.idNum = data['id'];
-	                // this.state.amountNum = data['amount'];
+	                // Perform image finding inside this
 	            }.bind(this));
 	        }
 	    }, {
@@ -113,13 +116,13 @@
 	                _react2.default.createElement(
 	                    'h3',
 	                    null,
-	                    'ID:',
+	                    'ID: ',
 	                    this.state.idNum
 	                ),
 	                _react2.default.createElement(
 	                    'h3',
 	                    null,
-	                    'Amount:',
+	                    'Amount: $',
 	                    this.state.amountNum
 	                )
 	            );
@@ -21301,7 +21304,12 @@
 	module.exports = ReactDOMInvalidARIAHook;
 
 /***/ },
-/* 177 */,
+/* 177 */
+/***/ function(module, exports) {
+
+	module.exports = require("fs");
+
+/***/ },
 /* 178 */
 /***/ function(module, exports) {
 

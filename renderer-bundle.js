@@ -76,98 +76,137 @@
 	var ipc = __webpack_require__(178).ipcRenderer;
 
 	var App = function (_React$Component) {
-	    _inherits(App, _React$Component);
+	  _inherits(App, _React$Component);
 
-	    function App(props) {
-	        _classCallCheck(this, App);
+	  function App(props) {
+	    _classCallCheck(this, App);
 
-	        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	  }
+
+	  _createClass(App, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(IDForm, null),
+	        _react2.default.createElement(SettingsButton, null)
+	      );
 	    }
+	  }]);
 
-	    _createClass(App, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(IDForm, null);
-	        }
-	    }]);
-
-	    return App;
+	  return App;
 	}(_react2.default.Component);
 
 	var IDForm = function (_React$Component2) {
-	    _inherits(IDForm, _React$Component2);
+	  _inherits(IDForm, _React$Component2);
 
-	    function IDForm(props) {
-	        _classCallCheck(this, IDForm);
+	  function IDForm(props) {
+	    _classCallCheck(this, IDForm);
 
-	        var _this2 = _possibleConstructorReturn(this, (IDForm.__proto__ || Object.getPrototypeOf(IDForm)).call(this, props));
+	    var _this2 = _possibleConstructorReturn(this, (IDForm.__proto__ || Object.getPrototypeOf(IDForm)).call(this, props));
 
-	        _this2.state = {
-	            id: '',
-	            amount: ''
-	        };
+	    _this2.state = {
+	      id: '',
+	      amount: ''
+	    };
 
-	        _this2.handleIDChange = _this2.handleIDChange.bind(_this2);
-	        _this2.handleAmountChange = _this2.handleAmountChange.bind(_this2);
-	        _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
-	        return _this2;
+	    _this2.handleIDChange = _this2.handleIDChange.bind(_this2);
+	    _this2.handleAmountChange = _this2.handleAmountChange.bind(_this2);
+	    _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
+	    return _this2;
+	  }
+
+	  _createClass(IDForm, [{
+	    key: 'handleIDChange',
+	    value: function handleIDChange(event) {
+	      this.setState({ id: event.target.value });
+	      // console.log('student ID '+event.target.value);
 	    }
+	  }, {
+	    key: 'handleAmountChange',
+	    value: function handleAmountChange(event) {
+	      this.setState({ amount: event.target.value });
+	      // console.log('Charging ' + event.target.value);
+	    }
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(event) {
+	      // TODO: use regex to check if it is a valid id number
+	      event.preventDefault();
+	      console.log('ID Scanned: ' + this.state.id + "\nCharging student $" + this.state.amount);
+	      var scannedId = this.state.id;
+	      var chargeAmount = this.state.amount;
+	      var dataDict = { id: scannedId, amount: chargeAmount };
+	      ipc.send('scannedId', dataDict);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var reg = new RegExp('^[0-9]{7}$');
+	      return _react2.default.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit },
+	        _react2.default.createElement(
+	          'label',
+	          null,
+	          _react2.default.createElement('input', {
+	            type: 'text',
+	            value: this.state.id,
+	            onChange: this.handleIDChange,
+	            placeholder: 'Scan Student ID'
+	          }),
+	          _react2.default.createElement('input', {
+	            type: 'text',
+	            value: this.state.amount,
+	            onChange: this.handleAmountChange,
+	            placeholder: 'Amount'
+	          })
+	        ),
+	        reg.test(this.state.id) && this.state.amount != '' ? _react2.default.createElement(
+	          'button',
+	          { type: 'submit' },
+	          'Submit'
+	        ) : _react2.default.createElement(
+	          'button',
+	          { type: 'submit', disabled: true },
+	          'Submit'
+	        )
+	      );
+	    }
+	  }]);
 
-	    _createClass(IDForm, [{
-	        key: 'handleIDChange',
-	        value: function handleIDChange(event) {
-	            this.setState({ id: event.target.value });
-	            // console.log('student ID '+event.target.value);
-	        }
-	    }, {
-	        key: 'handleAmountChange',
-	        value: function handleAmountChange(event) {
-	            this.setState({ amount: event.target.value });
-	            // console.log('Charging ' + event.target.value);
-	        }
-	    }, {
-	        key: 'handleSubmit',
-	        value: function handleSubmit(event) {
-	            // TODO: use regex to check if it is a valid id number
-	            event.preventDefault();
-	            console.log('ID Scanned: ' + this.state.id + "\nCharging student $" + this.state.amount);
-	            var scannedId = this.state.id;
-	            var chargeAmount = this.state.amount;
-	            var dataDict = { id: scannedId, amount: chargeAmount };
-	            ipc.send('scannedId', dataDict);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'form',
-	                { onSubmit: this.handleSubmit },
-	                _react2.default.createElement(
-	                    'label',
-	                    null,
-	                    _react2.default.createElement('input', {
-	                        type: 'text',
-	                        value: this.state.id,
-	                        onChange: this.handleIDChange,
-	                        placeholder: 'Scan Student ID'
-	                    }),
-	                    _react2.default.createElement('input', {
-	                        type: 'text',
-	                        value: this.state.amount,
-	                        onChange: this.handleAmountChange,
-	                        placeholder: 'Amount'
-	                    })
-	                ),
-	                _react2.default.createElement(
-	                    'button',
-	                    { type: 'submit' },
-	                    'Submit'
-	                )
-	            );
-	        }
-	    }]);
+	  return IDForm;
+	}(_react2.default.Component);
 
-	    return IDForm;
+	var SettingsButton = function (_React$Component3) {
+	  _inherits(SettingsButton, _React$Component3);
+
+	  function SettingsButton(props) {
+	    _classCallCheck(this, SettingsButton);
+
+	    var _this3 = _possibleConstructorReturn(this, (SettingsButton.__proto__ || Object.getPrototypeOf(SettingsButton)).call(this, props));
+
+	    _this3.handleClick = _this3.handleClick.bind(_this3);
+	    return _this3;
+	  }
+
+	  _createClass(SettingsButton, [{
+	    key: 'handleClick',
+	    value: function handleClick() {}
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'button',
+	        { onClick: this.handleClick },
+	        'Settings'
+	      );
+	    }
+	  }]);
+
+	  return SettingsButton;
 	}(_react2.default.Component);
 
 	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));

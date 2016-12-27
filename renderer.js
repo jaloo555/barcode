@@ -14,7 +14,12 @@ class App extends React.Component {
         super(props);
     }
     render() {
-        return (<IDForm/>);
+        return (
+          <div>
+            <IDForm/>
+            <SettingsButton/>
+          </div>
+      );
     }
 }
 
@@ -52,6 +57,7 @@ class IDForm extends React.Component {
   }
 
   render() {
+    var reg = new RegExp('^[0-9]{7}$');
       return (
         <form onSubmit={this.handleSubmit}>
           <label>
@@ -68,9 +74,27 @@ class IDForm extends React.Component {
               placeholder="Amount"
               />
           </label>
-          <button type="submit">Submit</button>
+          {reg.test(this.state.id) && this.state.amount != '' ? (<button type="submit">Submit</button>):(<button type="submit" disabled>Submit</button>)}
         </form>
       );
+  }
+}
+
+class SettingsButton extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    
+  }
+
+  render() {
+    return(
+      <button onClick= {this.handleClick}>Settings</button>
+    );
   }
 }
 
