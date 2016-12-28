@@ -123,7 +123,11 @@
 	                    'Amount: $',
 	                    this.state.amountNum
 	                ),
-	                _react2.default.createElement('img', { src: this.state.imgSrc })
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'imageContainer' },
+	                    _react2.default.createElement('img', { src: this.state.imgSrc, className: 'idImage' })
+	                )
 	            );
 	        }
 	    }]);

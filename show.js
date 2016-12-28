@@ -41,7 +41,9 @@ class CheckViewContainer extends React.Component {
             <div>
                 <h3>ID: {this.state.idNum}</h3>
                 <h3>Amount: ${this.state.amountNum}</h3>
-                <img src={this.state.imgSrc}/>
+                <div className="imageContainer">
+                  <img src={this.state.imgSrc} className="idImage"/>
+                </div>
             </div>
         );
     }
