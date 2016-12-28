@@ -56,10 +56,6 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _fs = __webpack_require__(177);
-
-	var _fs2 = _interopRequireDefault(_fs);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -88,7 +84,8 @@
 
 	        _this.state = {
 	            idNum: '',
-	            amountNum: ''
+	            amountNum: '',
+	            imgSrc: ''
 	        };
 
 	        _this.componentDidMount = _this.componentDidMount.bind(_this);
@@ -102,7 +99,8 @@
 	                console.log('received', data);
 	                this.setState({
 	                    idNum: data['id'],
-	                    amountNum: data['amount']
+	                    amountNum: data['amount'],
+	                    imgSrc: './idImages/' + data['id'] + '.jpg'
 	                });
 	                // Perform image finding inside this
 	            }.bind(this));
@@ -124,7 +122,8 @@
 	                    null,
 	                    'Amount: $',
 	                    this.state.amountNum
-	                )
+	                ),
+	                _react2.default.createElement('img', { src: this.state.imgSrc })
 	            );
 	        }
 	    }]);
@@ -21304,12 +21303,7 @@
 	module.exports = ReactDOMInvalidARIAHook;
 
 /***/ },
-/* 177 */
-/***/ function(module, exports) {
-
-	module.exports = require("fs");
-
-/***/ },
+/* 177 */,
 /* 178 */
 /***/ function(module, exports) {
 

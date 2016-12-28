@@ -90,8 +90,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(IDForm, null),
-	        _react2.default.createElement(SettingsButton, null)
+	        _react2.default.createElement(IDForm, null)
 	      );
 	    }
 	  }]);
@@ -178,35 +177,6 @@
 	  }]);
 
 	  return IDForm;
-	}(_react2.default.Component);
-
-	var SettingsButton = function (_React$Component3) {
-	  _inherits(SettingsButton, _React$Component3);
-
-	  function SettingsButton(props) {
-	    _classCallCheck(this, SettingsButton);
-
-	    var _this3 = _possibleConstructorReturn(this, (SettingsButton.__proto__ || Object.getPrototypeOf(SettingsButton)).call(this, props));
-
-	    _this3.handleClick = _this3.handleClick.bind(_this3);
-	    return _this3;
-	  }
-
-	  _createClass(SettingsButton, [{
-	    key: 'handleClick',
-	    value: function handleClick() {}
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'button',
-	        { onClick: this.handleClick },
-	        'Settings'
-	      );
-	    }
-	  }]);
-
-	  return SettingsButton;
 	}(_react2.default.Component);
 
 	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));

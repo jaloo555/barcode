@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-import fs from 'fs'
 
 // Inter-window Communication
 const ipc = require('electron').ipcRenderer
@@ -17,7 +16,8 @@ class CheckViewContainer extends React.Component {
         super(props);
         this.state = {
             idNum: '',
-            amountNum: ''
+            amountNum: '',
+            imgSrc: ''
         };
 
         this.componentDidMount = this.componentDidMount.bind(this)
@@ -28,7 +28,8 @@ class CheckViewContainer extends React.Component {
           console.log('received', data);
           this.setState({
             idNum: data['id'],
-            amountNum: data['amount']
+            amountNum: data['amount'],
+            imgSrc: ('./idImages/'+ data['id'] + '.jpg')
           });
           // Perform image finding inside this
         }).bind(this));
@@ -40,6 +41,7 @@ class CheckViewContainer extends React.Component {
             <div>
                 <h3>ID: {this.state.idNum}</h3>
                 <h3>Amount: ${this.state.amountNum}</h3>
+                <img src={this.state.imgSrc}/>
             </div>
         );
     }

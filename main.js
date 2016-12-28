@@ -45,22 +45,6 @@ function createWindow() {
         slashes: true
     }))
 
-    prefPane = new BrowserWindow({
-      width: 600,
-      height: 400,
-      frame: true,
-      parent: win,
-      modal: true,
-      alwaysOnTop: true,
-      show: false
-    })
-
-    prefPane.loadURL(url.format({
-      pathname: path.join(__dirname, './pref.html'),
-      protocol: 'file:',
-      slashes: true
-    }))
-
     // Transit for data between parent and child
     ipc.on('scannedId', function(event, arg) {
         child.show()

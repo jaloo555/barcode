@@ -17,7 +17,6 @@ class App extends React.Component {
         return (
           <div>
             <IDForm/>
-            <SettingsButton/>
           </div>
       );
     }
@@ -77,24 +76,6 @@ class IDForm extends React.Component {
           {reg.test(this.state.id) && this.state.amount != '' ? (<button type="submit">Submit</button>):(<button type="submit" disabled>Submit</button>)}
         </form>
       );
-  }
-}
-
-class SettingsButton extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick() {
-    
-  }
-
-  render() {
-    return(
-      <button onClick= {this.handleClick}>Settings</button>
-    );
   }
 }
 
