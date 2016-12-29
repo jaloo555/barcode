@@ -2,7 +2,7 @@
   "name": "barcode",
   "description": "A minimal Electron application",
   "version": "0.1.0",
-  "main": "main.js",
+  "main": "./app/main.js",
   "author": "Jason Chen",
   "license": "MIT",
   "repository": "https://github.com/jaloo555/barcode",

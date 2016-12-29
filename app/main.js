@@ -7,20 +7,18 @@ const ipc = require('electron').ipcMain
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 let child
+let saleSetting
 function createWindow() {
     // Create the browser window.
     win = new BrowserWindow({width: 800, height: 600, frame: true})
-
     // and load the index.html of the app.
     win.loadURL(url.format({
-        pathname: path.join(__dirname, './index.html'),
+        pathname: path.join(__dirname,'./html/index.html'),
         protocol: 'file:',
         slashes: true
     }))
-
     // Open the DevTools.
     win.webContents.openDevTools()
-
     // Emitted when the window is closed.
     win.on('closed', () => {
         // Dereference the window object, usually you would store windows
@@ -40,10 +38,38 @@ function createWindow() {
         show: false
     })
     child.loadURL(url.format({
-        pathname: path.join(__dirname, './show.html'),
+        pathname: path.join(__dirname, './html/show.html'),
         protocol: 'file:',
         slashes: true
     }))
+
+    // Create detail view (modal box) that holds the confirmation page
+    saleSetting = new BrowserWindow({
+        width: 600,
+        height: 560,
+        frame: true,
+        parent: win,
+        modal: true,
+        alwaysOnTop: true,
+        show: true
+    })
+    saleSetting.loadURL(url.format({
+        pathname: path.join(__dirname, './html/saleSetting.html'),
+        protocol: 'file:',
+        slashes: true
+    }))
+
+    // Transit for setting clubName
+    ipc.on('setClubName-toggle', function(event, arg) {
+      var id = arg;
+        if (saleSetting.isVisible()){
+          saleSetting.hide()
+          win.webContents.send('setClubName', id)
+        } else {
+          saleSetting.show()
+          saleSetting.webContents.send('changeClubName', id)
+        }
+    })
 
     // Transit for data between parent and child
     ipc.on('scannedId', function(event, arg) {

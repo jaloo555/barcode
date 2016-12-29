@@ -33,6 +33,7 @@ class IDForm extends React.Component {
       this.handleIDChange = this.handleIDChange.bind(this);
       this.handleAmountChange = this.handleAmountChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+      this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   handleIDChange(event) {

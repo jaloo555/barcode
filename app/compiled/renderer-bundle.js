@@ -114,6 +114,7 @@
 	    _this2.handleIDChange = _this2.handleIDChange.bind(_this2);
 	    _this2.handleAmountChange = _this2.handleAmountChange.bind(_this2);
 	    _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
+	    _this2.componentDidMount = _this2.componentDidMount.bind(_this2);
 	    return _this2;
 	  }
 

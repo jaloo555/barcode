@@ -29,7 +29,7 @@ class CheckViewContainer extends React.Component {
           this.setState({
             idNum: data['id'],
             amountNum: data['amount'],
-            imgSrc: ('./idImages/'+ data['id'] + '.jpg')
+            imgSrc: ('../../idImages/'+ data['id'] + '.jpg')
           });
           // Perform image finding inside this
         }).bind(this));

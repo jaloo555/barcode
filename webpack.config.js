@@ -2,11 +2,12 @@ var webpack = require('webpack');
 module.exports = {
     target: 'electron',
     entry: {
-        'renderer-bundle': './renderer.js',
-        'show-bundle': './show.js'
+        'renderer-bundle': './app/renderer.js',
+        'show-bundle': './app/show.js',
+        'saleSetting-bundle': './app/saleSetting.js'
     },
     output: {
-        filename: "[name].js"
+        filename: "./app/compiled/[name].js"
     },
     node: {
         __dirname: false,
