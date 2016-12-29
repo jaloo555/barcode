@@ -102,20 +102,16 @@
 	        _this2.componentDidMount = _this2.componentDidMount.bind(_this2);
 	        return _this2;
 	    }
-	    // componentDidMount() {
-	    //     ipc.on('scannedId', (function(event,data) {
-	    //       console.log('received', data);
-	    //       this.setState({
-	    //         idNum: data['id'],
-	    //         amountNum: data['amount'],
-	    //         imgSrc: ('../../idImages/'+ data['id'] + '.jpg')
-	    //       });
-	    //       // Perform image finding inside this
-	    //     }).bind(this));
-	    //
-	    // }
 
 	    _createClass(NameBox, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            ipc.on('changeClubName', function (event, data) {
+	                console.log('setting club name', data);
+	                this.setState({ clubName: data });
+	            }.bind(this));
+	        }
+	    }, {
 	        key: 'handleChange',
 	        value: function handleChange(event) {
 	            this.setState({ clubName: event.target.value });
@@ -132,6 +128,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var reg = new RegExp('^(?!\s*$).+');
 	            return _react2.default.createElement(
 	                'div',
 	                null,
@@ -149,9 +146,13 @@
 	                        null,
 	                        _react2.default.createElement('input', { type: 'text', value: this.state.clubName, onChange: this.handleChange, placeholder: 'Enter ClubName' })
 	                    ),
-	                    _react2.default.createElement(
+	                    reg.test(this.state.clubName) ? _react2.default.createElement(
 	                        'button',
 	                        { type: 'submit' },
+	                        'Confirm'
+	                    ) : _react2.default.createElement(
+	                        'button',
+	                        { type: 'submit', disabled: true },
 	                        'Confirm'
 	                    )
 	                )

@@ -67,11 +67,6 @@
 	// Inter-window Communication
 	var ipc = __webpack_require__(178).ipcRenderer;
 
-	var cancelButton = document.getElementById("cancel-action");
-	cancelButton.addEventListener("click", function () {
-	    ipc.send('cancel-action');
-	}, false);
-
 	// React Component
 
 	var CheckViewContainer = function (_React$Component) {
@@ -85,10 +80,13 @@
 	        _this.state = {
 	            idNum: '',
 	            amountNum: '',
-	            imgSrc: ''
+	            imgSrc: '',
+	            clubName: ''
 	        };
 
 	        _this.componentDidMount = _this.componentDidMount.bind(_this);
+	        _this.handleCancel = _this.handleCancel.bind(_this);
+	        _this.handleConfirm = _this.handleConfirm.bind(_this);
 	        return _this;
 	    }
 
@@ -100,10 +98,25 @@
 	                this.setState({
 	                    idNum: data['id'],
 	                    amountNum: data['amount'],
-	                    imgSrc: '../../idImages/' + data['id'] + '.jpg'
+	                    imgSrc: '../../idImages/' + data['id'] + '.jpg',
+	                    clubName: data['club']
 	                });
 	                // Perform image finding inside this
 	            }.bind(this));
+	        }
+	    }, {
+	        key: 'handleConfirm',
+	        value: function handleConfirm() {
+	            var scannedId = this.state.idNum;
+	            var chargeAmount = this.state.amountNum;
+	            var clubName = this.state.clubName;
+	            var dataDict = { id: scannedId, amount: chargeAmount, club: clubName };
+	            ipc.send('saveToDB', dataDict);
+	        }
+	    }, {
+	        key: 'handleCancel',
+	        value: function handleCancel() {
+	            ipc.send('cancel-action');
 	        }
 	    }, {
 	        key: 'render',
@@ -124,9 +137,29 @@
 	                    this.state.amountNum
 	                ),
 	                _react2.default.createElement(
+	                    'h3',
+	                    null,
+	                    'Charged to: ',
+	                    this.state.clubName
+	                ),
+	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'imageContainer' },
 	                    _react2.default.createElement('img', { src: this.state.imgSrc, className: 'idImage' })
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.handleCancel },
+	                    'Cancel'
+	                ),
+	                this.state.idNum != '' && this.state.amountNum != '' && this.state.clubName != '' ? _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.handleConfirm },
+	                    'Confirm'
+	                ) : _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.handleConfirm, disabled: true },
+	                    'Submit'
 	                )
 	            );
 	        }

@@ -4,11 +4,6 @@ import ReactDOM from 'react-dom'
 // Inter-window Communication
 const ipc = require('electron').ipcRenderer
 
-var cancelButton = document.getElementById("cancel-action");
-cancelButton.addEventListener("click", function() {
-    ipc.send('cancel-action');
-}, false)
-
 // React Component
 
 class CheckViewContainer extends React.Component {
@@ -17,10 +12,13 @@ class CheckViewContainer extends React.Component {
         this.state = {
             idNum: '',
             amountNum: '',
-            imgSrc: ''
+            imgSrc: '',
+            clubName: ''
         };
 
         this.componentDidMount = this.componentDidMount.bind(this)
+        this.handleCancel = this.handleCancel.bind(this)
+        this.handleConfirm = this.handleConfirm.bind(this)
     }
 
     componentDidMount() {
@@ -29,11 +27,24 @@ class CheckViewContainer extends React.Component {
           this.setState({
             idNum: data['id'],
             amountNum: data['amount'],
-            imgSrc: ('../../idImages/'+ data['id'] + '.jpg')
+            imgSrc: ('../../idImages/'+ data['id'] + '.jpg'),
+            clubName: data['club']
           });
           // Perform image finding inside this
         }).bind(this));
 
+    }
+
+    handleConfirm() {
+      var scannedId = this.state.idNum;
+      var chargeAmount = this.state.amountNum;
+      var clubName = this.state.clubName
+      var dataDict = {id: scannedId, amount: chargeAmount, club: clubName};
+      ipc.send('saveToDB', dataDict);
+    }
+
+    handleCancel() {
+      ipc.send('cancel-action');
     }
 
     render() {
@@ -41,9 +52,12 @@ class CheckViewContainer extends React.Component {
             <div>
                 <h3>ID: {this.state.idNum}</h3>
                 <h3>Amount: ${this.state.amountNum}</h3>
+                <h3>Charged to: {this.state.clubName}</h3>
                 <div className="imageContainer">
                   <img src={this.state.imgSrc} className="idImage"/>
                 </div>
+                <button onClick={this.handleCancel}>Cancel</button>
+                {this.state.idNum != '' && this.state.amountNum != '' && this.state.clubName != '' ?(<button onClick={this.handleConfirm}>Confirm</button>):(<button onClick={this.handleConfirm} disabled>Submit</button>)}
             </div>
         );
     }

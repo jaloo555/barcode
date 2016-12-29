@@ -24,18 +24,13 @@ class NameBox extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
     }
-    // componentDidMount() {
-    //     ipc.on('scannedId', (function(event,data) {
-    //       console.log('received', data);
-    //       this.setState({
-    //         idNum: data['id'],
-    //         amountNum: data['amount'],
-    //         imgSrc: ('../../idImages/'+ data['id'] + '.jpg')
-    //       });
-    //       // Perform image finding inside this
-    //     }).bind(this));
-    //
-    // }
+
+    componentDidMount(){
+      ipc.on('changeClubName', (function(event,data) {
+        console.log('setting club name', data);
+        this.setState({clubName: data});
+      }).bind(this));
+    }
 
     handleChange(event) {
         this.setState({clubName: event.target.value});
@@ -50,6 +45,7 @@ class NameBox extends React.Component {
     }
 
     render() {
+      var reg = new RegExp('^(?!\s*$).+');
         return (
             <div>
                 <h1>Welcome {this.state.clubName}</h1>
@@ -57,7 +53,7 @@ class NameBox extends React.Component {
                     <label>
                         <input type="text" value={this.state.clubName} onChange={this.handleChange} placeholder="Enter ClubName"/>
                     </label>
-                    <button type="submit">Confirm</button>
+                    {reg.test(this.state.clubName) ? (<button type="submit">Confirm</button>):(<button type="submit" disabled>Confirm</button>)}
                 </form>
             </div>
         );

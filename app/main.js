@@ -2,18 +2,20 @@ const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
 const ipc = require('electron').ipcMain
+const Datastore = require('nedb');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 let child
 let saleSetting
+
 function createWindow() {
     // Create the browser window.
     win = new BrowserWindow({width: 800, height: 600, frame: true})
     // and load the index.html of the app.
     win.loadURL(url.format({
-        pathname: path.join(__dirname,'./html/index.html'),
+        pathname: path.join(__dirname, './html/index.html'),
         protocol: 'file:',
         slashes: true
     }))
@@ -30,7 +32,7 @@ function createWindow() {
     // Create detail view (modal box) that holds the confirmation page
     child = new BrowserWindow({
         width: 600,
-        height: 560,
+        height: 580,
         frame: true,
         parent: win,
         modal: true,
@@ -61,13 +63,13 @@ function createWindow() {
 
     // Transit for setting clubName
     ipc.on('setClubName-toggle', function(event, arg) {
-      var id = arg;
-        if (saleSetting.isVisible()){
-          saleSetting.hide()
-          win.webContents.send('setClubName', id)
+        var id = arg;
+        if (saleSetting.isVisible()) {
+            saleSetting.hide()
+            win.webContents.send('setClubName', id)
         } else {
-          saleSetting.show()
-          saleSetting.webContents.send('changeClubName', id)
+            saleSetting.show()
+            saleSetting.webContents.send('changeClubName', id)
         }
     })
 
@@ -83,11 +85,35 @@ function createWindow() {
     })
 }
 
+// TODO:  Change to load to an external file, load into google sheets api
+function runDatabase() {
+    var dbPath = path.join(__dirname, './db/records.db');
+    var db = new Datastore({filename: dbPath, autoload: true, timestampData: true});
+    db.count({}, function (err, count) {
+      // count equals to 4
+      console.log(count, 'items');
+    });
+
+    ipc.on('saveToDB', function(event, data) {
+        child.hide()
+        var newItem = {
+          clubName: data['club'],
+          id: data['id'],
+          amount: data['amount']
+        }
+        db.insert(newItem, function(err, doc) {
+            console.log('Inserted $', doc.amount, 'for ', doc.clubName, ' by ', doc.id)
+        })
+        win.webContents.send('clear')
+    })
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function() {
     createWindow()
+    runDatabase()
 })
 
 // Quit when all windows are closed.

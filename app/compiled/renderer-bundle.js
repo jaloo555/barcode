@@ -108,17 +108,40 @@
 
 	    _this2.state = {
 	      id: '',
-	      amount: ''
+	      amount: '',
+	      clubName: 'Need a club name'
 	    };
 
 	    _this2.handleIDChange = _this2.handleIDChange.bind(_this2);
 	    _this2.handleAmountChange = _this2.handleAmountChange.bind(_this2);
 	    _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
 	    _this2.componentDidMount = _this2.componentDidMount.bind(_this2);
+	    _this2.handleChangeName = _this2.handleChangeName.bind(_this2);
 	    return _this2;
 	  }
 
 	  _createClass(IDForm, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      ipc.on('setClubName', function (event, data) {
+	        console.log('setting club name', data);
+	        this.setState({ clubName: data });
+	      }.bind(this));
+	      ipc.on('clear', function (event) {
+	        console.log('reset');
+	        this.setState({
+	          id: '',
+	          amount: ''
+	        });
+	      }.bind(this));
+	    }
+	  }, {
+	    key: 'handleChangeName',
+	    value: function handleChangeName() {
+	      var currentName = this.state.clubName;
+	      ipc.send('setClubName-toggle', currentName);
+	    }
+	  }, {
 	    key: 'handleIDChange',
 	    value: function handleIDChange(event) {
 	      this.setState({ id: event.target.value });
@@ -135,10 +158,11 @@
 	    value: function handleSubmit(event) {
 	      // TODO: use regex to check if it is a valid id number
 	      event.preventDefault();
-	      console.log('ID Scanned: ' + this.state.id + "\nCharging student $" + this.state.amount);
+	      console.log('ID Scanned: ' + this.state.id + "\nCharging student $" + this.state.amount + " for club: " + this.state.clubName);
 	      var scannedId = this.state.id;
 	      var chargeAmount = this.state.amount;
-	      var dataDict = { id: scannedId, amount: chargeAmount };
+	      var clubName = this.state.clubName;
+	      var dataDict = { id: scannedId, amount: chargeAmount, club: clubName };
 	      ipc.send('scannedId', dataDict);
 	    }
 	  }, {
@@ -146,32 +170,48 @@
 	    value: function render() {
 	      var reg = new RegExp('^[0-9]{7}$');
 	      return _react2.default.createElement(
-	        'form',
-	        { onSubmit: this.handleSubmit },
+	        'div',
+	        null,
 	        _react2.default.createElement(
-	          'label',
+	          'h1',
 	          null,
-	          _react2.default.createElement('input', {
-	            type: 'text',
-	            value: this.state.id,
-	            onChange: this.handleIDChange,
-	            placeholder: 'Scan Student ID'
-	          }),
-	          _react2.default.createElement('input', {
-	            type: 'text',
-	            value: this.state.amount,
-	            onChange: this.handleAmountChange,
-	            placeholder: 'Amount'
-	          })
+	          'Bake Sale: ',
+	          this.state.clubName
 	        ),
-	        reg.test(this.state.id) && this.state.amount != '' ? _react2.default.createElement(
+	        _react2.default.createElement(
 	          'button',
-	          { type: 'submit' },
-	          'Submit'
-	        ) : _react2.default.createElement(
-	          'button',
-	          { type: 'submit', disabled: true },
-	          'Submit'
+	          { onClick: this.handleChangeName },
+	          'Change'
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'form',
+	          { onSubmit: this.handleSubmit },
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            _react2.default.createElement('input', {
+	              type: 'text',
+	              value: this.state.id,
+	              onChange: this.handleIDChange,
+	              placeholder: 'Scan Student ID'
+	            }),
+	            _react2.default.createElement('input', {
+	              type: 'text',
+	              value: this.state.amount,
+	              onChange: this.handleAmountChange,
+	              placeholder: 'Amount'
+	            })
+	          ),
+	          reg.test(this.state.id) && this.state.amount != '' && this.state.clubName != 'Need a club name' ? _react2.default.createElement(
+	            'button',
+	            { type: 'submit' },
+	            'Submit'
+	          ) : _react2.default.createElement(
+	            'button',
+	            { type: 'submit', disabled: true },
+	            'Submit'
+	          )
 	        )
 	      );
 	    }
