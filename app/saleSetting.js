@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import {Button, TextInput} from 'react-desktop/windows'
 
 const ipc = require('electron').ipcRenderer
 
@@ -47,17 +48,20 @@ class NameBox extends React.Component {
     render() {
       var reg = new RegExp('^(?!\s*$).+');
         return (
-            <div>
-                <h1>Welcome {this.state.clubName}</h1>
+            <div className="formDiv" >
+                <h1 className="header" >Welcome {this.state.clubName}</h1>
                 <form onSubmit={this.handleSubmit}>
                     <label>
-                        <input type="text" value={this.state.clubName} onChange={this.handleChange} placeholder="Enter ClubName"/>
+                        <h2 className="header">Enter the name of the sale to begin:</h2>
+                        <input type="text" className="textInput" value={this.state.clubName} onChange={this.handleChange} placeholder="Enter club name"/>
                     </label>
-                    {reg.test(this.state.clubName) ? (<button type="submit">Confirm</button>):(<button type="submit" disabled>Confirm</button>)}
+                    <br />
+                    {reg.test(this.state.clubName) ? (<Button type="submit" className="submitBtn">Confirm</Button>):(<Button type="submit" className="submitBtn" disabled>Confirm</Button>)}
                 </form>
             </div>
         );
     }
 }
+
 ReactDOM.render(
     <App/>, document.getElementById('app'));

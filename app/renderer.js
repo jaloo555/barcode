@@ -87,7 +87,7 @@ class IDForm extends React.Component {
         return (
             <div className="formDiv">
                 <h1 className="header">Bake Sale</h1>
-                <h1 className="header">{this.state.clubName}</h1>
+                <h1 className="header cName">{this.state.clubName}</h1>
                 <form onSubmit={this.handleSubmit} className="formDiv">
                     <label>
                         {/*<TextInput

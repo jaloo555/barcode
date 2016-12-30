@@ -184,7 +184,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    'h1',
-	                    { className: 'header' },
+	                    { className: 'header cName' },
 	                    this.state.clubName
 	                ),
 	                _react2.default.createElement(
