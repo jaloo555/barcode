@@ -21,11 +21,11 @@
   },
   "dependencies": {
     "file-loader": "^0.9.0",
-    "pouchdb": "^6.1.0",
     "react": "^15.3.2",
     "react-desktop": "^0.2.14",
     "react-dom": "^15.3.2",
-    "url-loader": "^0.5.7"
+    "url-loader": "^0.5.7",
+    "nedb": "^1.8.0"
   },
   "scripts": {
     "dev": "webpack --watch",

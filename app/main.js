@@ -93,6 +93,7 @@ function runDatabase() {
       // count equals to 4
       console.log(count, 'items');
     });
+    db.ensureIndex({fieldName: 'clubName'})
 
     ipc.on('saveToDB', function(event, data) {
         child.hide()
