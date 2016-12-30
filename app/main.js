@@ -32,8 +32,8 @@ function createWindow() {
 
     // Create detail view (modal box) that holds the confirmation page
     child = new BrowserWindow({
-        width: 620,
-        height: 600,
+        width: 580,
+        height: 740,
         frame: true,
         alwaysOnTop: true,
         show: false

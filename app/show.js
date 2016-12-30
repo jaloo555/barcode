@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
+import {Button, TextInput} from 'react-desktop/windows'
 
 // Inter-window Communication
 const ipc = require('electron').ipcRenderer
@@ -50,14 +51,16 @@ class CheckViewContainer extends React.Component {
     render() {
         return (
             <div>
-                <h3>ID: {this.state.idNum}</h3>
-                <h3>Amount: ${this.state.amountNum}</h3>
-                <h3>Charged to: {this.state.clubName}</h3>
+                <h3 className="header">ID: {this.state.idNum}</h3>
+                <h3 className="header">Amount: ${this.state.amountNum}</h3>
+                <h3 className="header">Charged to: {this.state.clubName}</h3>
                 <div className="imageContainer">
-                  <img src={this.state.imgSrc} className="idImage"/>
+                  <h3 className="idHeader">ID Image: </h3><img src={this.state.imgSrc} className="idImage"/>
                 </div>
-                <button onClick={this.handleCancel}>Cancel</button>
-                {this.state.idNum != '' && this.state.amountNum != '' && this.state.clubName != '' ?(<button onClick={this.handleConfirm}>Confirm</button>):(<button onClick={this.handleConfirm} disabled>Submit</button>)}
+                <div className="btnWrap">
+                  <Button className="btns" onClick={this.handleCancel}>Cancel</Button>
+                  {this.state.idNum != '' && this.state.amountNum != '' && this.state.clubName != '' ?(<Button className="btns" onClick={this.handleConfirm}>Confirm</Button>):(<Button className="btns" onClick={this.handleConfirm} disabled>Submit</Button>)}
+                </div>
             </div>
         );
     }

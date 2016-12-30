@@ -6,21 +6,64 @@
   </head>
   <body>
 
-    <h1>Details</h1>
+    <h1 class="detailHead">Details</h1>
     <div id="show-app"></div>
     <script>
       // You can also require other files to run in this process
       require('../compiled/show-bundle.js')
     </script>
     <style>
+
+      #show-app {
+        position: relative;
+      }
+
+      .header {
+        position: relative;
+        font-family: "Segoe UI";
+        font-weight: 100;
+        text-align: left;
+        margin-bottom: 35px;
+      }
+
+      .detailHead {
+        position: relative;
+        font-family: "Segoe UI";
+        font-weight: 200;
+        font-size: 2.5em;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .idHeader {
+        position: relative;
+        font-family: "Segoe UI";
+        font-weight: 100;
+        text-align: left;
+        margin-bottom: 25px;
+      }
+
+      .btnWrap {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .btns {
+        margin-left: 18px;
+        text-align: center;
+      }
+
       .imageContainer {
-        width: 45%;
-        height: 45%;
+        width: 40%;
+        height: 40%;
+        text-align: left;
+        vertical-align: left;
       }
 
       .imageContainer img{
         max-height: 100%;
         max-width: 100%;
       }
+
     </style>
 </html>
