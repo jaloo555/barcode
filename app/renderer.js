@@ -86,8 +86,9 @@ class IDForm extends React.Component {
         var reg = new RegExp('^[0-9]{7}$');
         return (
             <div className="formDiv">
-                <h1>Bake Sale: {this.state.clubName}</h1>
-                <form onSubmit={this.handleSubmit}>
+                <h1 className="header">Bake Sale</h1>
+                <h1 className="header">{this.state.clubName}</h1>
+                <form onSubmit={this.handleSubmit} className="formDiv">
                     <label>
                         {/*<TextInput
                             theme='light'
@@ -114,10 +115,10 @@ class IDForm extends React.Component {
                     </label>
                     {reg.test(this.state.id) && this.state.amount != '' && this.state.clubName != 'Need a club name'
                         ? (
-                            <Button type="submit">Submit</Button>
+                            <Button type="submit" className="submitBtn">Submit</Button>
                         )
                         : (
-                            <Button type="submit" disabled>Submit</Button>
+                            <Button type="submit" className="submitBtn" disabled>Submit</Button>
                         )}
                 </form>
                 <span className="optionSpan">

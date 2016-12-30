@@ -179,13 +179,17 @@
 	                { className: 'formDiv' },
 	                _react2.default.createElement(
 	                    'h1',
-	                    null,
-	                    'Bake Sale: ',
+	                    { className: 'header' },
+	                    'Bake Sale'
+	                ),
+	                _react2.default.createElement(
+	                    'h1',
+	                    { className: 'header' },
 	                    this.state.clubName
 	                ),
 	                _react2.default.createElement(
 	                    'form',
-	                    { onSubmit: this.handleSubmit },
+	                    { onSubmit: this.handleSubmit, className: 'formDiv' },
 	                    _react2.default.createElement(
 	                        'label',
 	                        null,
@@ -196,11 +200,11 @@
 	                    ),
 	                    reg.test(this.state.id) && this.state.amount != '' && this.state.clubName != 'Need a club name' ? _react2.default.createElement(
 	                        _windows.Button,
-	                        { type: 'submit' },
+	                        { type: 'submit', className: 'submitBtn' },
 	                        'Submit'
 	                    ) : _react2.default.createElement(
 	                        _windows.Button,
-	                        { type: 'submit', disabled: true },
+	                        { type: 'submit', className: 'submitBtn', disabled: true },
 	                        'Submit'
 	                    )
 	                ),
