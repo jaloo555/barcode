@@ -2,7 +2,10 @@ const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
 const ipc = require('electron').ipcMain
-const Datastore = require('nedb');
+const Datastore = require('nedb')
+const moment = require('moment')
+const json2csv = require('json2csv')
+const fs = require('fs')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -86,26 +89,36 @@ function createWindow() {
 }
 
 // TODO:  Change to load to an external file, load into google sheets api
+
 function runDatabase() {
-    var dbPath = path.join(__dirname, './db/records.db');
-    var db = new Datastore({filename: dbPath, autoload: true, timestampData: true});
+    var dbPath = path.join(__dirname, './db/records.json');
+    var db = new Datastore({filename: dbPath, autoload: true});
     db.count({}, function (err, count) {
-      // count equals to 4
+      // test if db working
       console.log(count, 'items');
     });
-    db.ensureIndex({fieldName: 'clubName'})
-
     ipc.on('saveToDB', function(event, data) {
         child.hide()
         var newItem = {
           clubName: data['club'],
           id: data['id'],
-          amount: data['amount']
+          amount: data['amount'],
+          date_created: moment().format('MMMM Do YYYY, h:mm:ss a')
         }
         db.insert(newItem, function(err, doc) {
             console.log('Inserted $', doc.amount, 'for ', doc.clubName, ' by ', doc.id)
         })
         win.webContents.send('clear')
+    })
+    ipc.on('export-request', (event) => {
+      console.log('received request, now exporting');
+      db.find({}, function (err, docs) {
+        var fields = ['clubName', 'id', 'amount', 'date_created', '_id']
+        var data = docs
+        var csv = json2csv({data: data, fields: fields})
+        console.log(csv)
+        win.webContents.send('parsed-csv', csv);
+      });
     })
 }
 

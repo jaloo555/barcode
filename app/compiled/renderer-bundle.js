@@ -71,153 +71,207 @@
 	// Necessary for creating pop-up window
 	var BrowserWindow = __webpack_require__(178).remote.BrowserWindow;
 	var path = __webpack_require__(179);
+	var app = __webpack_require__(178).remote;
+	var dialog = app.dialog;
 
 	// Communication between 2 render processes
 	var ipc = __webpack_require__(178).ipcRenderer;
 
 	var App = function (_React$Component) {
-	  _inherits(App, _React$Component);
+	    _inherits(App, _React$Component);
 
-	  function App(props) {
-	    _classCallCheck(this, App);
+	    function App(props) {
+	        _classCallCheck(this, App);
 
-	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
-	  }
-
-	  _createClass(App, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(IDForm, null)
-	      );
+	        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	    }
-	  }]);
 
-	  return App;
+	    _createClass(App, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(IDForm, null),
+	                _react2.default.createElement(ExportToCSVOptions, null)
+	            );
+	        }
+	    }]);
+
+	    return App;
 	}(_react2.default.Component);
 
 	var IDForm = function (_React$Component2) {
-	  _inherits(IDForm, _React$Component2);
+	    _inherits(IDForm, _React$Component2);
 
-	  function IDForm(props) {
-	    _classCallCheck(this, IDForm);
+	    function IDForm(props) {
+	        _classCallCheck(this, IDForm);
 
-	    var _this2 = _possibleConstructorReturn(this, (IDForm.__proto__ || Object.getPrototypeOf(IDForm)).call(this, props));
+	        var _this2 = _possibleConstructorReturn(this, (IDForm.__proto__ || Object.getPrototypeOf(IDForm)).call(this, props));
 
-	    _this2.state = {
-	      id: '',
-	      amount: '',
-	      clubName: 'Need a club name'
-	    };
+	        _this2.state = {
+	            id: '',
+	            amount: '',
+	            clubName: 'Need a club name'
+	        };
 
-	    _this2.handleIDChange = _this2.handleIDChange.bind(_this2);
-	    _this2.handleAmountChange = _this2.handleAmountChange.bind(_this2);
-	    _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
-	    _this2.componentDidMount = _this2.componentDidMount.bind(_this2);
-	    _this2.handleChangeName = _this2.handleChangeName.bind(_this2);
-	    return _this2;
-	  }
+	        _this2.handleIDChange = _this2.handleIDChange.bind(_this2);
+	        _this2.handleAmountChange = _this2.handleAmountChange.bind(_this2);
+	        _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
+	        _this2.componentDidMount = _this2.componentDidMount.bind(_this2);
+	        _this2.handleChangeName = _this2.handleChangeName.bind(_this2);
+	        return _this2;
+	    }
 
-	  _createClass(IDForm, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      ipc.on('setClubName', function (event, data) {
-	        console.log('setting club name', data);
-	        this.setState({ clubName: data });
-	      }.bind(this));
-	      ipc.on('clear', function (event) {
-	        console.log('reset');
-	        this.setState({
-	          id: '',
-	          amount: ''
-	        });
-	      }.bind(this));
-	    }
-	  }, {
-	    key: 'handleChangeName',
-	    value: function handleChangeName() {
-	      var currentName = this.state.clubName;
-	      ipc.send('setClubName-toggle', currentName);
-	    }
-	  }, {
-	    key: 'handleIDChange',
-	    value: function handleIDChange(event) {
-	      this.setState({ id: event.target.value });
-	      // console.log('student ID '+event.target.value);
-	    }
-	  }, {
-	    key: 'handleAmountChange',
-	    value: function handleAmountChange(event) {
-	      this.setState({ amount: event.target.value });
-	      // console.log('Charging ' + event.target.value);
-	    }
-	  }, {
-	    key: 'handleSubmit',
-	    value: function handleSubmit(event) {
-	      // TODO: use regex to check if it is a valid id number
-	      event.preventDefault();
-	      console.log('ID Scanned: ' + this.state.id + "\nCharging student $" + this.state.amount + " for club: " + this.state.clubName);
-	      var scannedId = this.state.id;
-	      var chargeAmount = this.state.amount;
-	      var clubName = this.state.clubName;
-	      var dataDict = { id: scannedId, amount: chargeAmount, club: clubName };
-	      ipc.send('scannedId', dataDict);
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var reg = new RegExp('^[0-9]{7}$');
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          'Bake Sale: ',
-	          this.state.clubName
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          { onClick: this.handleChangeName },
-	          'Change'
-	        ),
-	        _react2.default.createElement('br', null),
-	        _react2.default.createElement(
-	          'form',
-	          { onSubmit: this.handleSubmit },
-	          _react2.default.createElement(
-	            'label',
-	            null,
-	            _react2.default.createElement('input', {
-	              type: 'text',
-	              value: this.state.id,
-	              onChange: this.handleIDChange,
-	              placeholder: 'Scan Student ID'
-	            }),
-	            _react2.default.createElement('input', {
-	              type: 'text',
-	              value: this.state.amount,
-	              onChange: this.handleAmountChange,
-	              placeholder: 'Amount'
-	            })
-	          ),
-	          reg.test(this.state.id) && this.state.amount != '' && this.state.clubName != 'Need a club name' ? _react2.default.createElement(
-	            'button',
-	            { type: 'submit' },
-	            'Submit'
-	          ) : _react2.default.createElement(
-	            'button',
-	            { type: 'submit', disabled: true },
-	            'Submit'
-	          )
-	        )
-	      );
-	    }
-	  }]);
+	    _createClass(IDForm, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            ipc.on('setClubName', function (event, data) {
+	                console.log('setting club name', data);
+	                this.setState({ clubName: data });
+	            }.bind(this));
+	            ipc.on('clear', function (event) {
+	                console.log('reset');
+	                this.setState({ id: '', amount: '' });
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'handleChangeName',
+	        value: function handleChangeName() {
+	            var currentName = this.state.clubName;
+	            ipc.send('setClubName-toggle', currentName);
+	        }
+	    }, {
+	        key: 'handleIDChange',
+	        value: function handleIDChange(event) {
+	            this.setState({ id: event.target.value });
+	            // console.log('student ID '+event.target.value);
+	        }
+	    }, {
+	        key: 'handleAmountChange',
+	        value: function handleAmountChange(event) {
+	            this.setState({ amount: event.target.value });
+	            // console.log('Charging ' + event.target.value);
+	        }
+	    }, {
+	        key: 'handleSubmit',
+	        value: function handleSubmit(event) {
+	            // TODO: use regex to check if it is a valid id number
+	            event.preventDefault();
+	            console.log('ID Scanned: ' + this.state.id + "\nCharging student $" + this.state.amount + " for club: " + this.state.clubName);
+	            var scannedId = this.state.id;
+	            var chargeAmount = this.state.amount;
+	            var clubName = this.state.clubName;
+	            var dataDict = {
+	                id: scannedId,
+	                amount: chargeAmount,
+	                club: clubName
+	            };
+	            ipc.send('scannedId', dataDict);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var reg = new RegExp('^[0-9]{7}$');
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'h1',
+	                    null,
+	                    'Bake Sale: ',
+	                    this.state.clubName
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.handleChangeName },
+	                    'Change'
+	                ),
+	                _react2.default.createElement('br', null),
+	                _react2.default.createElement(
+	                    'form',
+	                    { onSubmit: this.handleSubmit },
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        _react2.default.createElement('input', { type: 'text', value: this.state.id, onChange: this.handleIDChange, placeholder: 'Scan Student ID' }),
+	                        _react2.default.createElement('input', { type: 'text', value: this.state.amount, onChange: this.handleAmountChange, placeholder: 'Amount' })
+	                    ),
+	                    reg.test(this.state.id) && this.state.amount != '' && this.state.clubName != 'Need a club name' ? _react2.default.createElement(
+	                        'button',
+	                        { type: 'submit' },
+	                        'Submit'
+	                    ) : _react2.default.createElement(
+	                        'button',
+	                        { type: 'submit', disabled: true },
+	                        'Submit'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
 
-	  return IDForm;
+	    return IDForm;
+	}(_react2.default.Component);
+
+	var ExportToCSVOptions = function (_React$Component3) {
+	    _inherits(ExportToCSVOptions, _React$Component3);
+
+	    function ExportToCSVOptions(props) {
+	        _classCallCheck(this, ExportToCSVOptions);
+
+	        var _this3 = _possibleConstructorReturn(this, (ExportToCSVOptions.__proto__ || Object.getPrototypeOf(ExportToCSVOptions)).call(this, props));
+
+	        _this3.handleClick = _this3.handleClick.bind(_this3);
+	        _this3.componentDidMount = _this3.componentDidMount.bind(_this3);
+	        return _this3;
+	    }
+
+	    _createClass(ExportToCSVOptions, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            ipc.on('parsed-csv', function (event, data) {
+	                console.log('Received csv file, now saving to file system', data);
+
+	                dialog.showSaveDialog({
+	                    title: 'Save as CSV',
+	                    defaultPath: '~/file.csv'
+	                }, function (fileName) {
+	                    if (fileName === undefined) {
+	                        alert('File not saved!');
+	                        return;
+	                    }
+	                    _fs2.default.writeFile(fileName, data, function (err) {
+	                        if (err) {
+	                            alert("An error ocurred creating the file: " + err.message);
+	                        } else {
+	                            alert("The file has been succesfully saved");
+	                        }
+	                    });
+	                });
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'handleClick',
+	        value: function handleClick() {
+	            ipc.send('export-request');
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'button',
+	                    { className: 'exportBtn', onClick: this.handleClick },
+	                    'Export'
+	                )
+	            );
+	        }
+	    }]);
+
+	    return ExportToCSVOptions;
 	}(_react2.default.Component);
 
 	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));
