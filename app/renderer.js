@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
+import {Button, TextInput} from 'react-desktop/windows'
 import fs from 'fs'
 
 // Necessary for creating pop-up window
@@ -19,7 +20,6 @@ class App extends React.Component {
         return (
             <div>
                 <IDForm/>
-                <ExportToCSVOptions/>
             </div>
         );
     }
@@ -59,7 +59,7 @@ class IDForm extends React.Component {
 
     handleIDChange(event) {
         this.setState({id: event.target.value});
-        // console.log('student ID '+event.target.value);
+        console.log('student ID '+event.target.value);
     }
 
     handleAmountChange(event) {
@@ -85,23 +85,45 @@ class IDForm extends React.Component {
     render() {
         var reg = new RegExp('^[0-9]{7}$');
         return (
-            <div>
+            <div className="formDiv">
                 <h1>Bake Sale: {this.state.clubName}</h1>
-                <button onClick={this.handleChangeName}>Change</button>
-                <br/>
                 <form onSubmit={this.handleSubmit}>
                     <label>
-                        <input type="text" value={this.state.id} onChange={this.handleIDChange} placeholder="Scan Student ID"/>
-                        <input type="text" value={this.state.amount} onChange={this.handleAmountChange} placeholder="Amount"/>
+                        {/*<TextInput
+                            theme='light'
+                            color='#cc7f29'
+                            label="Enter Student ID: "
+                            placeholder="Scan Student ID"
+                            type="text"
+                            value={this.state.id}
+                            onChange={this.handleIDChange}
+                          />
+                          <TextInput
+                              theme='light'
+                              color='#cc7f29'
+                              label="Enter amount of item: "
+                              placeholder="Amount"
+                              type="text"
+                              value={this.state.amount}
+                              onChange={this.handleAmountChange}
+                            />*/}
+                          <input type="text" value={this.state.id} onChange={this.handleIDChange} placeholder="Scan Student ID" className="textInput"/>
+                          <br />
+                          <input type="text" value={this.state.amount} onChange={this.handleAmountChange} placeholder="Amount" className="textInput"/>
+                          <br />
                     </label>
                     {reg.test(this.state.id) && this.state.amount != '' && this.state.clubName != 'Need a club name'
                         ? (
-                            <button type="submit">Submit</button>
+                            <Button type="submit">Submit</Button>
                         )
                         : (
-                            <button type="submit" disabled>Submit</button>
+                            <Button type="submit" disabled>Submit</Button>
                         )}
                 </form>
+                <span className="optionSpan">
+                  <Button onClick={this.handleChangeName} className="changeBtn">Change Club</Button>
+                  <ExportToCSVOptions/>
+                </span>
             </div>
         );
     }
@@ -145,7 +167,7 @@ class ExportToCSVOptions extends React.Component {
     render() {
         return (
             <div>
-                <button className="exportBtn" onClick={this.handleClick}>Export</button>
+                <Button className="exportBtn" onClick={this.handleClick}>Export</Button>
             </div>
         )
     }
