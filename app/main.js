@@ -15,15 +15,13 @@ let saleSetting
 
 function createWindow() {
     // Create the browser window.
-    win = new BrowserWindow({width: 800, height: 600, frame: true})
+    win = new BrowserWindow({width: 800, height: 600, frame: true, show:false})
     // and load the index.html of the app.
     win.loadURL(url.format({
         pathname: path.join(__dirname, './html/index.html'),
         protocol: 'file:',
         slashes: true
     }))
-    // Open the DevTools.
-    win.webContents.openDevTools()
     // Emitted when the window is closed.
     win.on('closed', () => {
         // Dereference the window object, usually you would store windows
@@ -34,11 +32,9 @@ function createWindow() {
 
     // Create detail view (modal box) that holds the confirmation page
     child = new BrowserWindow({
-        width: 600,
-        height: 580,
+        width: 620,
+        height: 600,
         frame: true,
-        parent: win,
-        modal: true,
         alwaysOnTop: true,
         show: false
     })
@@ -53,8 +49,6 @@ function createWindow() {
         width: 600,
         height: 560,
         frame: true,
-        parent: win,
-        modal: true,
         alwaysOnTop: true,
         show: true
     })
@@ -69,8 +63,10 @@ function createWindow() {
         var id = arg;
         if (saleSetting.isVisible()) {
             saleSetting.hide()
+            win.show()
             win.webContents.send('setClubName', id)
         } else {
+            win.hide()
             saleSetting.show()
             saleSetting.webContents.send('changeClubName', id)
         }
@@ -79,12 +75,14 @@ function createWindow() {
     // Transit for data between parent and child
     ipc.on('scannedId', function(event, arg) {
         child.show()
+        win.hide()
         var id = arg;
         child.webContents.send('scannedId', id)
     })
 
     ipc.on('cancel-action', function() {
         child.hide()
+        win.show()
     })
 }
 
@@ -109,6 +107,7 @@ function runDatabase() {
             console.log('Inserted $', doc.amount, 'for ', doc.clubName, ' by ', doc.id)
         })
         win.webContents.send('clear')
+        win.show()
     })
     ipc.on('export-request', (event) => {
       console.log('received request, now exporting');
