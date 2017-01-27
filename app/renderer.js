@@ -90,24 +90,6 @@ class IDForm extends React.Component {
                 <h1 className="header cName">{this.state.clubName}</h1>
                 <form onSubmit={this.handleSubmit} className="formDiv">
                     <label>
-                        {/*<TextInput
-                            theme='light'
-                            color='#cc7f29'
-                            label="Enter Student ID: "
-                            placeholder="Scan Student ID"
-                            type="text"
-                            value={this.state.id}
-                            onChange={this.handleIDChange}
-                          />
-                          <TextInput
-                              theme='light'
-                              color='#cc7f29'
-                              label="Enter amount of item: "
-                              placeholder="Amount"
-                              type="text"
-                              value={this.state.amount}
-                              onChange={this.handleAmountChange}
-                            />*/}
                           <input type="text" value={this.state.id} onChange={this.handleIDChange} placeholder="Scan Student ID" className="textInput"/>
                           <br />
                           <input type="text" value={this.state.amount} onChange={this.handleAmountChange} placeholder="Amount" className="textInput"/>

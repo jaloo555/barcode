@@ -50,6 +50,7 @@ class NameBox extends React.Component {
         return (
             <div className="formDiv" >
                 <h1 className="header" >Welcome {this.state.clubName}</h1>
+                <img src="../../Cranbrook.jpg"/>
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         <h2 className="header">Enter the name of the sale to begin:</h2>
