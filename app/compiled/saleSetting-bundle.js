@@ -134,13 +134,13 @@
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'formDiv' },
+	                _react2.default.createElement('img', { className: 'logoImage', src: '../../Cranbrook.jpg' }),
 	                _react2.default.createElement(
 	                    'h1',
 	                    { className: 'header' },
 	                    'Welcome ',
 	                    this.state.clubName
 	                ),
-	                _react2.default.createElement('img', { src: '../../Cranbrook.jpg' }),
 	                _react2.default.createElement(
 	                    'form',
 	                    { onSubmit: this.handleSubmit },
@@ -155,6 +155,7 @@
 	                        _react2.default.createElement('input', { type: 'text', className: 'textInput', value: this.state.clubName, onChange: this.handleChange, placeholder: 'Enter club name' })
 	                    ),
 	                    _react2.default.createElement('br', null),
+	                    ' ',
 	                    reg.test(this.state.clubName) ? _react2.default.createElement(
 	                        _windows.Button,
 	                        { type: 'submit', className: 'submitBtn' },

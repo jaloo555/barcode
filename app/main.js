@@ -1,4 +1,5 @@
 const {app, BrowserWindow} = require('electron')
+const electron = require('electron')
 const path = require('path')
 const url = require('url')
 const ipc = require('electron').ipcMain
@@ -12,10 +13,11 @@ const fs = require('fs')
 let win
 let child
 let saleSetting
+let prefsWindow
 
 function createWindow() {
     // Create the browser window.
-    win = new BrowserWindow({width: 800, height: 600, frame: true, show:false})
+    win = new BrowserWindow({width: 800, height: 600, frame: true, show: false})
     // and load the index.html of the app.
     win.loadURL(url.format({
         pathname: path.join(__dirname, './html/index.html'),
@@ -30,33 +32,40 @@ function createWindow() {
         win = null
     })
 
-    // Create detail view (modal box) that holds the confirmation page
-    child = new BrowserWindow({
-        width: 580,
-        height: 740,
-        frame: true,
-        alwaysOnTop: true,
-        show: false
+    prefsWindow = new BrowserWindow({width: 400, height: 400, frame: true, show: false, alwaysOnTop: true})
+    prefsWindow.loadURL(url.format({
+        pathname: path.join(__dirname, './html/prefs.html'),
+        protocol: 'file:',
+        slashes: true
+    }))
+    prefsWindow.on('close', function(event) {
+        prefsWindow.hide();
+        event.preventDefault();
     })
+
+    // Create detail view (modal box) that holds the confirmation page
+    child = new BrowserWindow({width: 580, height: 740, frame: true, alwaysOnTop: true, show: false})
     child.loadURL(url.format({
         pathname: path.join(__dirname, './html/show.html'),
         protocol: 'file:',
         slashes: true
     }))
+    child.on('close', function(event) {
+        child.hide();
+        event.preventDefault();
+    })
 
     // Create detail view (modal box) that holds the confirmation page
-    saleSetting = new BrowserWindow({
-        width: 600,
-        height: 560,
-        frame: true,
-        alwaysOnTop: true,
-        show: true
-    })
+    saleSetting = new BrowserWindow({width: 600, height: 560, frame: true, alwaysOnTop: true, show: true})
     saleSetting.loadURL(url.format({
         pathname: path.join(__dirname, './html/saleSetting.html'),
         protocol: 'file:',
         slashes: true
     }))
+    saleSetting.on('close', function(event) {
+        saleSetting.hide();
+        event.preventDefault();
+    })
 
     // Transit for setting clubName
     ipc.on('setClubName-toggle', function(event, arg) {
@@ -70,6 +79,16 @@ function createWindow() {
             saleSetting.show()
             saleSetting.webContents.send('changeClubName', id)
         }
+    })
+
+    // Transit for settings pane
+    ipc.on('settings-toggle', function(event,arg) {
+      if (prefsWindow.isVisible()) {
+        prefsWindow.hide()
+      }
+      else {
+        prefsWindow.show()
+      }
     })
 
     // Transit for data between parent and child
@@ -86,22 +105,20 @@ function createWindow() {
     })
 }
 
-// TODO:  Change to load to an external file, load into google sheets api
-
 function runDatabase() {
     var dbPath = path.join(__dirname, './db/records.json');
     var db = new Datastore({filename: dbPath, autoload: true});
-    db.count({}, function (err, count) {
-      // test if db working
-      console.log(count, 'items');
+    db.count({}, function(err, count) {
+        // test if db working
+        console.log(count, 'items');
     });
     ipc.on('saveToDB', function(event, data) {
         child.hide()
         var newItem = {
-          clubName: data['club'],
-          id: data['id'],
-          amount: data['amount'],
-          date_created: moment().format('MMMM Do YYYY, h:mm:ss a')
+            clubName: data['club'],
+            id: data['id'],
+            amount: data['amount'],
+            date_created: moment().format('MMMM Do YYYY, h:mm:ss a')
         }
         db.insert(newItem, function(err, doc) {
             console.log('Inserted $', doc.amount, 'for ', doc.clubName, ' by ', doc.id)
@@ -110,14 +127,14 @@ function runDatabase() {
         win.show()
     })
     ipc.on('export-request', (event) => {
-      console.log('received request, now exporting');
-      db.find({}, function (err, docs) {
-        var fields = ['clubName', 'id', 'amount', 'date_created', '_id']
-        var data = docs
-        var csv = json2csv({data: data, fields: fields})
-        console.log(csv)
-        win.webContents.send('parsed-csv', csv);
-      });
+        console.log('received request, now exporting');
+        db.find({}, function(err, docs) {
+            var fields = ['clubName', 'id', 'amount', 'date_created', '_id']
+            var data = docs
+            var csv = json2csv({data: data, fields: fields})
+            console.log(csv)
+            win.webContents.send('parsed-csv', csv);
+        });
     })
 }
 
@@ -125,6 +142,7 @@ function runDatabase() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function() {
+
     createWindow()
     runDatabase()
 })

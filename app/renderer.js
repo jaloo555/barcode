@@ -16,6 +16,9 @@ class App extends React.Component {
     constructor(props) {
         super(props);
     }
+    componentDidMount() {
+
+    }
     render() {
         return (
             <div>
@@ -39,6 +42,7 @@ class IDForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
+        this.handleSuperUser = this.handleSuperUser.bind(this);
     }
 
     componentDidMount() {
@@ -50,6 +54,11 @@ class IDForm extends React.Component {
             console.log('reset');
             this.setState({id: '', amount: ''});
         }).bind(this));
+    }
+
+    handleSuperUser(){
+      ipc.send('settings-toggle');
+      console.log('settings-toggle');
     }
 
     handleChangeName() {
@@ -68,7 +77,6 @@ class IDForm extends React.Component {
     }
 
     handleSubmit(event) {
-        // TODO: use regex to check if it is a valid id number
         event.preventDefault();
         console.log('ID Scanned: ' + this.state.id + "\nCharging student $" + this.state.amount + " for club: " + this.state.clubName);
         var scannedId = this.state.id;
@@ -83,7 +91,7 @@ class IDForm extends React.Component {
     }
 
     render() {
-        var reg = new RegExp('^[0-9]{7}$');
+        var reg = new RegExp('^[0-9]{7,}$');
         return (
             <div className="formDiv">
                 <h1 className="header">Bake Sale</h1>
@@ -103,6 +111,9 @@ class IDForm extends React.Component {
                             <Button type="submit" className="submitBtn" disabled>Submit</Button>
                         )}
                 </form>
+                <span className="superuserSpan">
+                  <Button onClick={this.handleSuperUser} className="superuserBtn">Settings</Button>
+                </span>
                 <span className="optionSpan">
                   <Button onClick={this.handleChangeName} className="changeBtn">Change Club</Button>
                   <ExportToCSVOptions/>

@@ -4,7 +4,8 @@ module.exports = {
     entry: {
         'renderer-bundle': './app/renderer.js',
         'show-bundle': './app/show.js',
-        'saleSetting-bundle': './app/saleSetting.js'
+        'saleSetting-bundle': './app/saleSetting.js',
+        'prefs-bundle': './app/prefs.js'
     },
     output: {
         filename: "./app/compiled/[name].js"

@@ -89,6 +89,9 @@
 	    }
 
 	    _createClass(App, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {}
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
@@ -121,6 +124,7 @@
 	        _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
 	        _this2.componentDidMount = _this2.componentDidMount.bind(_this2);
 	        _this2.handleChangeName = _this2.handleChangeName.bind(_this2);
+	        _this2.handleSuperUser = _this2.handleSuperUser.bind(_this2);
 	        return _this2;
 	    }
 
@@ -135,6 +139,12 @@
 	                console.log('reset');
 	                this.setState({ id: '', amount: '' });
 	            }.bind(this));
+	        }
+	    }, {
+	        key: 'handleSuperUser',
+	        value: function handleSuperUser() {
+	            ipc.send('settings-toggle');
+	            console.log('settings-toggle');
 	        }
 	    }, {
 	        key: 'handleChangeName',
@@ -157,7 +167,6 @@
 	    }, {
 	        key: 'handleSubmit',
 	        value: function handleSubmit(event) {
-	            // TODO: use regex to check if it is a valid id number
 	            event.preventDefault();
 	            console.log('ID Scanned: ' + this.state.id + "\nCharging student $" + this.state.amount + " for club: " + this.state.clubName);
 	            var scannedId = this.state.id;
@@ -173,7 +182,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var reg = new RegExp('^[0-9]{7}$');
+	            var reg = new RegExp('^[0-9]{7,}$');
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'formDiv' },
@@ -206,6 +215,15 @@
 	                        _windows.Button,
 	                        { type: 'submit', className: 'submitBtn', disabled: true },
 	                        'Submit'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'span',
+	                    { className: 'superuserSpan' },
+	                    _react2.default.createElement(
+	                        _windows.Button,
+	                        { onClick: this.handleSuperUser, className: 'superuserBtn' },
+	                        'Settings'
 	                    )
 	                ),
 	                _react2.default.createElement(
