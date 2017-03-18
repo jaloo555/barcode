@@ -116,7 +116,6 @@
 
 	    var _this2 = _possibleConstructorReturn(this, (Settings.__proto__ || Object.getPrototypeOf(Settings)).call(this, props));
 
-	    _this2.handleChange = _this2.handleChange.bind(_this2);
 	    _this2.handleClr = _this2.handleClr.bind(_this2);
 	    _this2.handleExport = _this2.handleExport.bind(_this2);
 	    return _this2;
@@ -147,11 +146,10 @@
 	      }.bind(this));
 	    }
 	  }, {
-	    key: 'handleChange',
-	    value: function handleChange() {}
-	  }, {
 	    key: 'handleClr',
-	    value: function handleClr() {}
+	    value: function handleClr() {
+	      ipc.send('clearAllData');
+	    }
 	  }, {
 	    key: 'handleExport',
 	    value: function handleExport() {

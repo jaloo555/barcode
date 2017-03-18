@@ -129,9 +129,8 @@ function runDatabase() {
         win.show()
     })
     ipc.on('clearAllData'), (event) => {
-      db.remove({{ multi: true }}, function(err,doc) {
+      db.remove({},{ multi: true }, function(err,doc) {
         console.log('removing all data');
-
       });
     }
     ipc.on('export-request', (event) => {

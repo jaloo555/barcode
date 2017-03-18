@@ -31,7 +31,6 @@ class App extends React.Component {
 class Settings extends React.Component {
   constructor (props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
     this.handleClr = this.handleClr.bind(this);
     this.handleExport = this.handleExport.bind(this);
   }
@@ -59,10 +58,8 @@ class Settings extends React.Component {
       }).bind(this));
   }
 
-  handleChange(){
-  }
-
   handleClr(){
+    ipc.send('clearAllData');
   }
 
   handleExport() {
