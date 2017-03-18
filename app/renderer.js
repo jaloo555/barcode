@@ -98,14 +98,14 @@ class IDForm extends React.Component {
                 <h1 className="header cName">{this.state.clubName}</h1>
                 <form onSubmit={this.handleSubmit} className="formDiv">
                     <label>
-                          <input type="text" value={this.state.id} onChange={this.handleIDChange} placeholder="Scan Student ID" className="textInput"/>
+                          <input type="password" value={this.state.id} onChange={this.handleIDChange} placeholder="Scan Student ID" className="textInput"/>
                           <br />
                           <input type="text" value={this.state.amount} onChange={this.handleAmountChange} placeholder="Amount" className="textInput"/>
                           <br />
                     </label>
                     {reg.test(this.state.id) && this.state.amount != '' && this.state.clubName != 'Need a club name'
                         ? (
-                            <Button type="submit" className="submitBtn">Submit</Button>
+                            <Button type="submit" className="submitBtn submitEnabled">Submit</Button>
                         )
                         : (
                             <Button type="submit" className="submitBtn" disabled>Submit</Button>

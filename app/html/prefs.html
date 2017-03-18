@@ -1,18 +1,52 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>Settings</title>
-  </head>
-  <body>
+</head>
 
-    <h1>Admin</h1>
-    <div id="show-app"></div>
+<body>
+    <div id="app"></div>
     <script>
-      // You can also require other files to run in this process
-      require('../compiled/prefs-bundle.js')
+        // You can also require other files to run in this process
+        require('../compiled/prefs-bundle.js')
     </script>
     <style>
+        #app {
+          text-align: center;
+          margin: 0 auto;
+        }
 
+        .textInput {
+            border-width: 2px;
+            border-style: solid;
+            border-color: rgba(148, 148, 148, 1);
+            padding: 2px 10px 3px 10px;
+            line-height: 23px;
+            font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+            font-size: 15px;
+            font-weight: 100;
+            color: #000000;
+            margin-bottom: 18px;
+            margin-top: 18px;
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        .textInput:hover {
+            border-color: rgba(100, 100, 100, 1);
+            background: rgba(255, 255, 255, .5);
+        }
+
+        .textInput:focus {
+            outline: none;
+            border-color: rgba(0, 120, 215, 1);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .btns {
+            margin-top: 20px;
+        }
     </style>
+
 </html>

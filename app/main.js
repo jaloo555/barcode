@@ -32,14 +32,14 @@ function createWindow() {
         win = null
     })
 
-    prefsWindow = new BrowserWindow({width: 400, height: 400, frame: true, show: false, alwaysOnTop: true})
+    prefsWindow = new BrowserWindow({width: 600, height: 560, frame: true, alwaysOnTop: true, show: false})
     prefsWindow.loadURL(url.format({
-        pathname: path.join(__dirname, './html/prefs.html'),
-        protocol: 'file:',
-        slashes: true
+      pathname: path.join(__dirname, './html/prefs.html'),
+      protocol: 'file:',
+      slashes: true
     }))
     prefsWindow.on('close', function(event) {
-        prefsWindow.hide();
+        child.hide();
         event.preventDefault();
     })
 
@@ -85,9 +85,11 @@ function createWindow() {
     ipc.on('settings-toggle', function(event,arg) {
       if (prefsWindow.isVisible()) {
         prefsWindow.hide()
+        win.show()
       }
       else {
         prefsWindow.show()
+        win.hide()
       }
     })
 
@@ -126,6 +128,12 @@ function runDatabase() {
         win.webContents.send('clear')
         win.show()
     })
+    ipc.on('clearAllData'), (event) => {
+      db.remove({{ multi: true }}, function(err,doc) {
+        console.log('removing all data');
+
+      });
+    }
     ipc.on('export-request', (event) => {
         console.log('received request, now exporting');
         db.find({}, function(err, docs) {
@@ -135,6 +143,16 @@ function runDatabase() {
             console.log(csv)
             win.webContents.send('parsed-csv', csv);
         });
+    })
+    ipc.on('export-request-admin', (event) => {
+      console.log('received request from admin, exporting');
+      db.find({}, function(err, docs) {
+          var fields = ['clubName', 'id', 'amount', 'date_created', '_id']
+          var data = docs
+          var csv = json2csv({data: data, fields: fields})
+          console.log(csv)
+          prefsWindow.webContents.send('parsed-csv', csv);
+      });
     })
 }
 

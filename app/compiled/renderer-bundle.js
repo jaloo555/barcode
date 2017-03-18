@@ -202,14 +202,14 @@
 	                    _react2.default.createElement(
 	                        'label',
 	                        null,
-	                        _react2.default.createElement('input', { type: 'text', value: this.state.id, onChange: this.handleIDChange, placeholder: 'Scan Student ID', className: 'textInput' }),
+	                        _react2.default.createElement('input', { type: 'password', value: this.state.id, onChange: this.handleIDChange, placeholder: 'Scan Student ID', className: 'textInput' }),
 	                        _react2.default.createElement('br', null),
 	                        _react2.default.createElement('input', { type: 'text', value: this.state.amount, onChange: this.handleAmountChange, placeholder: 'Amount', className: 'textInput' }),
 	                        _react2.default.createElement('br', null)
 	                    ),
 	                    reg.test(this.state.id) && this.state.amount != '' && this.state.clubName != 'Need a club name' ? _react2.default.createElement(
 	                        _windows.Button,
-	                        { type: 'submit', className: 'submitBtn' },
+	                        { type: 'submit', className: 'submitBtn submitEnabled' },
 	                        'Submit'
 	                    ) : _react2.default.createElement(
 	                        _windows.Button,
