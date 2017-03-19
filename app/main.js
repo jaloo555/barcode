@@ -129,9 +129,23 @@ function runDatabase() {
         win.show()
     })
     ipc.on('clearAllData'), (event) => {
+      db.find({}, function(err, docs) {
+          var fields = ['clubName', 'id', 'amount', 'date_created', '_id']
+          var data = docs
+          var csv = json2csv({data: data, fields: fields})
+          console.log(csv)
+          prefsWindow.webContents.send('backup', csv);
+      });
       db.remove({},{ multi: true }, function(err,doc) {
         console.log('removing all data');
       });
+      prefsWindow.webContents.send('cleared');
+    }
+    ipc.on('voidLastItem'), (event) => {
+      db.remove({}, function(err,doc) {
+        console.log('voided last item');
+      });
+      prefsWindow.webContents.send('voided');
     }
     ipc.on('export-request', (event) => {
         console.log('received request, now exporting');

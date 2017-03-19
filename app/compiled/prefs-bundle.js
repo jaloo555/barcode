@@ -78,157 +78,192 @@
 	var dialog = app.dialog;
 
 	var App = function (_React$Component) {
-	  _inherits(App, _React$Component);
+	    _inherits(App, _React$Component);
 
-	  function App(props) {
-	    _classCallCheck(this, App);
+	    function App(props) {
+	        _classCallCheck(this, App);
 
-	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
-	  }
-
-	  _createClass(App, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {}
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          'Admin'
-	        ),
-	        _react2.default.createElement(Safety, null)
-	      );
+	        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	    }
-	  }]);
 
-	  return App;
+	    _createClass(App, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {}
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'h1',
+	                    null,
+	                    'Admin'
+	                ),
+	                _react2.default.createElement(Safety, null)
+	            );
+	        }
+	    }]);
+
+	    return App;
 	}(_react2.default.Component);
 
 	var Settings = function (_React$Component2) {
-	  _inherits(Settings, _React$Component2);
+	    _inherits(Settings, _React$Component2);
 
-	  function Settings(props) {
-	    _classCallCheck(this, Settings);
+	    function Settings(props) {
+	        _classCallCheck(this, Settings);
 
-	    var _this2 = _possibleConstructorReturn(this, (Settings.__proto__ || Object.getPrototypeOf(Settings)).call(this, props));
+	        var _this2 = _possibleConstructorReturn(this, (Settings.__proto__ || Object.getPrototypeOf(Settings)).call(this, props));
 
-	    _this2.handleClr = _this2.handleClr.bind(_this2);
-	    _this2.handleExport = _this2.handleExport.bind(_this2);
-	    return _this2;
-	  }
-
-	  _createClass(Settings, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      ipc.on('parsed-csv', function (event, data) {
-	        console.log('Received csv file, now saving to file system', data);
-
-	        dialog.showSaveDialog({
-	          title: 'Save as CSV',
-	          defaultPath: '~/file.csv'
-	        }, function (fileName) {
-	          if (fileName === undefined) {
-	            alert('File not saved!');
-	            return;
-	          }
-	          _fs2.default.writeFile(fileName, data, function (err) {
-	            if (err) {
-	              alert("An error ocurred creating the file: " + err.message);
-	            } else {
-	              alert("The file has been succesfully saved");
-	            }
-	          });
-	        });
-	      }.bind(this));
+	        _this2.handleClr = _this2.handleClr.bind(_this2);
+	        _this2.handleExport = _this2.handleExport.bind(_this2);
+	        return _this2;
 	    }
-	  }, {
-	    key: 'handleClr',
-	    value: function handleClr() {
-	      ipc.send('clearAllData');
-	    }
-	  }, {
-	    key: 'handleExport',
-	    value: function handleExport() {
-	      ipc.send('export-request-admin');
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          _windows.Button,
-	          { onClick: this.handleClr, className: 'btns' },
-	          'Clear all data'
-	        ),
-	        _react2.default.createElement('br', null),
-	        _react2.default.createElement(
-	          _windows.Button,
-	          { onClick: this.handleExport, className: 'btns' },
-	          'Export data'
-	        )
-	      );
-	    }
-	  }]);
 
-	  return Settings;
+	    _createClass(Settings, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            ipc.on('backup', function (event, data) {
+	                console.log('Before clearing, saving backup to file system', data);
+
+	                dialog.showSaveDialog({
+	                    title: 'Save as CSV',
+	                    defaultPath: '~/backup.csv'
+	                }, function (fileName) {
+	                    if (fileName === undefined) {
+	                        alert('File not saved!');
+	                        return;
+	                    }
+	                    _fs2.default.writeFile(fileName, data, function (err) {
+	                        if (err) {
+	                            alert("An error ocurred creating the backup: " + err.message);
+	                        } else {
+	                            alert("The backup has been succesfully saved");
+	                        }
+	                    });
+	                });
+	            }.bind(this));
+	            ipc.on('cleared', function (event, data) {
+	                alert('Succesfully cleared all data!');
+	            }.bind(this));
+	            ipc.on('parsed-csv', function (event, data) {
+	                console.log('Received csv file, now saving to file system', data);
+
+	                dialog.showSaveDialog({
+	                    title: 'Save as CSV',
+	                    defaultPath: '~/file.csv'
+	                }, function (fileName) {
+	                    if (fileName === undefined) {
+	                        alert('File not saved!');
+	                        return;
+	                    }
+	                    _fs2.default.writeFile(fileName, data, function (err) {
+	                        if (err) {
+	                            alert("An error ocurred creating the file: " + err.message);
+	                        } else {
+	                            alert("The file has been succesfully saved");
+	                        }
+	                    });
+	                });
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'handleClr',
+	        value: function handleClr() {
+	            ipc.send('clearAllData');
+	        }
+	    }, {
+	        key: 'handleExport',
+	        value: function handleExport() {
+	            ipc.send('export-request-admin');
+	        }
+	    }, {
+	        key: 'handleVoid',
+	        value: function handleVoid() {
+	            ipc.send('voidLastItem');
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    _windows.Button,
+	                    { onClick: this.handleClr, className: 'btns' },
+	                    'Clear all data'
+	                ),
+	                _react2.default.createElement('br', null),
+	                _react2.default.createElement(
+	                    _windows.Button,
+	                    { onClick: this.handleExport, className: 'btns' },
+	                    'Export data'
+	                ),
+	                _react2.default.createElement('br', null),
+	                _react2.default.createElement(
+	                    _windows.Button,
+	                    { onClick: this.handleVoid, className: 'btns' },
+	                    'Void last item'
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Settings;
 	}(_react2.default.Component);
 
 	var Safety = function (_React$Component3) {
-	  _inherits(Safety, _React$Component3);
+	    _inherits(Safety, _React$Component3);
 
-	  function Safety(props) {
-	    _classCallCheck(this, Safety);
+	    function Safety(props) {
+	        _classCallCheck(this, Safety);
 
-	    var _this3 = _possibleConstructorReturn(this, (Safety.__proto__ || Object.getPrototypeOf(Safety)).call(this, props));
+	        var _this3 = _possibleConstructorReturn(this, (Safety.__proto__ || Object.getPrototypeOf(Safety)).call(this, props));
 
-	    _this3.state = {
-	      password: ''
-	    };
+	        _this3.state = {
+	            password: ''
+	        };
 
-	    _this3.handleChange = _this3.handleChange.bind(_this3);
-	    _this3.handleBack = _this3.handleBack.bind(_this3);
-	    return _this3;
-	  }
-
-	  _createClass(Safety, [{
-	    key: 'handleChange',
-	    value: function handleChange(event) {
-	      this.setState({ password: event.target.value });
+	        _this3.handleChange = _this3.handleChange.bind(_this3);
+	        _this3.handleBack = _this3.handleBack.bind(_this3);
+	        return _this3;
 	    }
-	  }, {
-	    key: 'handleBack',
-	    value: function handleBack() {
-	      ipc.send('settings-toggle');
-	      this.setState({ password: '' });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement('input', { type: 'password', className: 'textInput', value: this.state.password, onChange: this.handleChange, placeholder: 'Enter password' }),
-	        this.state.password == 'drbrown' ? _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(Settings, null)
-	        ) : _react2.default.createElement('div', null),
-	        _react2.default.createElement(
-	          _windows.Button,
-	          { className: 'btns', onClick: this.handleBack },
-	          'Back'
-	        )
-	      );
-	    }
-	  }]);
 
-	  return Safety;
+	    _createClass(Safety, [{
+	        key: 'handleChange',
+	        value: function handleChange(event) {
+	            this.setState({ password: event.target.value });
+	        }
+	    }, {
+	        key: 'handleBack',
+	        value: function handleBack() {
+	            ipc.send('settings-toggle');
+	            this.setState({ password: '' });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement('input', { type: 'password', className: 'textInput', value: this.state.password, onChange: this.handleChange, placeholder: 'Enter password' }),
+	                ' ',
+	                this.state.password == 'drbrown' ? _react2.default.createElement(
+	                    'div',
+	                    null,
+	                    _react2.default.createElement(Settings, null)
+	                ) : _react2.default.createElement('div', null),
+	                _react2.default.createElement(
+	                    _windows.Button,
+	                    { className: 'btns', onClick: this.handleBack },
+	                    'Back'
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Safety;
 	}(_react2.default.Component);
 
 	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));
