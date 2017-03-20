@@ -7,7 +7,7 @@ const Datastore = require('nedb')
 const moment = require('moment')
 const json2csv = require('json2csv')
 const fs = require('fs')
-
+const csv2json = require('csvjson')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -34,9 +34,9 @@ function createWindow() {
 
     prefsWindow = new BrowserWindow({width: 600, height: 560, frame: true, alwaysOnTop: true, show: false})
     prefsWindow.loadURL(url.format({
-      pathname: path.join(__dirname, './html/prefs.html'),
-      protocol: 'file:',
-      slashes: true
+        pathname: path.join(__dirname, './html/prefs.html'),
+        protocol: 'file:',
+        slashes: true
     }))
     prefsWindow.on('close', function(event) {
         child.hide();
@@ -82,15 +82,14 @@ function createWindow() {
     })
 
     // Transit for settings pane
-    ipc.on('settings-toggle', function(event,arg) {
-      if (prefsWindow.isVisible()) {
-        prefsWindow.hide()
-        win.show()
-      }
-      else {
-        prefsWindow.show()
-        win.hide()
-      }
+    ipc.on('settings-toggle', function(event, arg) {
+        if (prefsWindow.isVisible()) {
+            prefsWindow.hide()
+            win.show()
+        } else {
+            prefsWindow.show()
+            win.hide()
+        }
     })
 
     // Transit for data between parent and child
@@ -107,14 +106,14 @@ function createWindow() {
     })
 }
 
-function runDatabase() {
+function runPurchasesDatabase() {
     var dbPath = path.join(__dirname, './db/records.json');
     var db = new Datastore({filename: dbPath, autoload: true});
     db.count({}, function(err, count) {
         // test if db working
         console.log(count, 'items');
     });
-    ipc.on('saveToDB', function(event, data) {
+    ipc.on('saveToDB', (event, data) => {
         child.hide()
         var newItem = {
             clubName: data['club'],
@@ -127,26 +126,21 @@ function runDatabase() {
         })
         win.webContents.send('clear')
         win.show()
-    })
-    ipc.on('clearAllData'), (event) => {
-      db.find({}, function(err, docs) {
-          var fields = ['clubName', 'id', 'amount', 'date_created', '_id']
-          var data = docs
-          var csv = json2csv({data: data, fields: fields})
-          console.log(csv)
-          prefsWindow.webContents.send('backup', csv);
-      });
-      db.remove({},{ multi: true }, function(err,doc) {
-        console.log('removing all data');
-      });
-      prefsWindow.webContents.send('cleared');
-    }
-    ipc.on('voidLastItem'), (event) => {
-      db.remove({}, function(err,doc) {
-        console.log('voided last item');
-      });
-      prefsWindow.webContents.send('voided');
-    }
+    });
+    ipc.on('clearAllData', (event) => {
+        db.remove({}, {
+            multi: true
+        }, function(err, doc) {
+            console.log('removing all data');
+        });
+        prefsWindow.webContents.send('cleared');
+    });
+    ipc.on('voidLastItem', (event) => {
+        db.remove({}, function(err, doc) {
+            console.log('voided last item');
+        });
+        prefsWindow.webContents.send('voided');
+    });
     ipc.on('export-request', (event) => {
         console.log('received request, now exporting');
         db.find({}, function(err, docs) {
@@ -158,15 +152,43 @@ function runDatabase() {
         });
     })
     ipc.on('export-request-admin', (event) => {
-      console.log('received request from admin, exporting');
-      db.find({}, function(err, docs) {
-          var fields = ['clubName', 'id', 'amount', 'date_created', '_id']
-          var data = docs
-          var csv = json2csv({data: data, fields: fields})
-          console.log(csv)
-          prefsWindow.webContents.send('parsed-csv', csv);
-      });
-    })
+        console.log('received request from admin, exporting');
+        db.find({}, function(err, docs) {
+            var fields = ['clubName', 'id', 'amount', 'date_created', '_id']
+            var data = docs
+            var csv = json2csv({data: data, fields: fields})
+            console.log(csv)
+            prefsWindow.webContents.send('parsed-csv', csv);
+        });
+    });
+}
+
+function runStudentsDatabase() {
+    var dbPath = path.join(__dirname, './db/students.json');
+    var dbStdnt = new Datastore({filename: dbPath, autoload: true});
+    dbStdnt.count({}, function(err, count) {
+        console.log(count, 'students in database.');
+    });
+    ipc.on('updateStudentDB', (function(event, data) {
+        dbStdnt.remove({},{multi: true}, function(err){})
+        var options = {
+            delimiter: ',',
+            quote: '"'
+        };
+        var jsonObj = csv2json.toSchemaObject(data, options)
+        for (var i = 0; i < jsonObj.length; i++) {
+            dbStdnt.insert(jsonObj[i], function(err){})
+        }
+        dbStdnt.count({}, function(err, count) {
+            console.log(count, 'students in database after update.');
+        });
+        prefsWindow.webContents.send('updateSuccess');
+    }))
+    ipc.on('checkDB', (function(event) {
+        dbStdnt.count({}, function(err, count) {
+            prefsWindow.webContents.send('studentsCount', count);
+        });
+    }))
 }
 
 // This method will be called when Electron has finished
@@ -175,7 +197,8 @@ function runDatabase() {
 app.on('ready', function() {
 
     createWindow()
-    runDatabase()
+    runPurchasesDatabase()
+    runStudentsDatabase()
 })
 
 // Quit when all windows are closed.

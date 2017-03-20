@@ -30,31 +30,19 @@ class Settings extends React.Component {
         super(props);
         this.handleClr = this.handleClr.bind(this);
         this.handleExport = this.handleExport.bind(this);
+        this.handleVoid = this.handleVoid.bind(this);
+        this.handleCheckDB = this.handleCheckDB.bind(this);
     }
 
     componentDidMount() {
-      ipc.on('backup', (function(event, data) {
-          console.log('Before clearing, saving backup to file system', data);
-
-          dialog.showSaveDialog({
-              title: 'Save as CSV',
-              defaultPath: '~/backup.csv'
-          }, function(fileName) {
-              if (fileName === undefined) {
-                  alert('File not saved!')
-                  return
-              }
-              fs.writeFile(fileName, data, function(err) {
-                  if (err) {
-                      alert("An error ocurred creating the backup: " + err.message)
-                  } else {
-                      alert("The backup has been succesfully saved");
-                  }
-              })
-          })
+      ipc.on('studentsCount', (function(event, data) {
+          alert('Number of students in database: ' +  data);
       }).bind(this));
         ipc.on('cleared', (function(event, data) {
-          alert('Succesfully cleared all data!');
+            alert('Succesfully cleared all data!');
+        }).bind(this));
+        ipc.on('voided', (function(event, data) {
+            alert('Succesfully voided last item!');
         }).bind(this));
         ipc.on('parsed-csv', (function(event, data) {
             console.log('Received csv file, now saving to file system', data);
@@ -81,13 +69,32 @@ class Settings extends React.Component {
     handleClr() {
         ipc.send('clearAllData');
     }
-
     handleExport() {
         ipc.send('export-request-admin');
     }
-
     handleVoid() {
         ipc.send('voidLastItem');
+    }
+    handleCheckDB() {
+      ipc.send('checkDB');
+    }
+    handleStudentDB() {
+        dialog.showOpenDialog(function (fileNames){
+          if(fileNames === undefined){
+            alert('No file selected');
+          }
+          else {
+            fs.readFile(fileNames[0], 'utf-8', function(err,data) {
+              if(err){
+                alert("An error ocurred reading the file :" + err.message);
+                return;
+              }
+              // Change how to handle the file content
+              console.log("The file content is : " + data);
+              ipc.send('updateStudentDB', data);
+            });
+          }
+        });
     }
 
     render() {
@@ -98,6 +105,11 @@ class Settings extends React.Component {
                 <Button onClick={this.handleExport} className="btns">Export data</Button>
                 <br/>
                 <Button onClick={this.handleVoid} className="btns">Void last item</Button>
+                <br/>
+                <Button onClick={this.handleStudentDB} className="btns">Update student database</Button>
+                <br/>
+                <Button onClick={this.handleCheckDB} className="btns">Check student database</Button>
+                <br/>
             </div>
         );
     }
