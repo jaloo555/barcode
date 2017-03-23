@@ -139,6 +139,9 @@
 	                console.log('reset');
 	                this.setState({ id: '', amount: '' });
 	            }.bind(this));
+	            ipc.on('noStdntError', function (event) {
+	                alert('This student is not in the database or is blacklisted.');
+	            }.bind(this));
 	        }
 	    }, {
 	        key: 'handleSuperUser',
@@ -186,6 +189,7 @@
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'formDiv' },
+	                _react2.default.createElement('img', { className: 'logoImage', src: '../../Cranbrook.jpg' }),
 	                _react2.default.createElement(
 	                    'h1',
 	                    { className: 'header' },

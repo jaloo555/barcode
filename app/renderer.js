@@ -54,6 +54,9 @@ class IDForm extends React.Component {
             console.log('reset');
             this.setState({id: '', amount: ''});
         }).bind(this));
+        ipc.on('noStdntError', (function(event) {
+            alert('This student is not in the database or is blacklisted.');
+        }).bind(this));
     }
 
     handleSuperUser(){
@@ -94,6 +97,7 @@ class IDForm extends React.Component {
         var reg = new RegExp('^[0-9]{7,}$');
         return (
             <div className="formDiv">
+                <img className="logoImage" src="../../Cranbrook.jpg"/>
                 <h1 className="header">Bake Sale</h1>
                 <h1 className="header cName">{this.state.clubName}</h1>
                 <form onSubmit={this.handleSubmit} className="formDiv">

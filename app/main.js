@@ -8,6 +8,8 @@ const moment = require('moment')
 const json2csv = require('json2csv')
 const fs = require('fs')
 const csv2json = require('csvjson')
+const email = require('emailjs')
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -15,6 +17,31 @@ let child
 let saleSetting
 let prefsWindow
 
+// Global reference of db
+var dbPath = path.join(__dirname, './db/records.json');
+var db = new Datastore({filename: dbPath, autoload: true});
+var dbStdntPath = path.join(__dirname, './db/students.json');
+var dbStdnt = new Datastore({filename: dbStdntPath, autoload: true});
+
+
+// Global reference of transporter
+var server = email.server.connect({
+  user: 'cksalereceipt@gmail.com',
+  password: 'cksalereceipt123',
+  host: 'smtp.gmail.com',
+  ssl: true
+});
+/*
+server.send({
+    text: "Thank you for your purchases at the Bake Sale.\nDetails: $150",
+    from: 'Cranbrook Bake Sale <cksalereceipt@gmail.com>',
+    to: 'Jason <cchen18@cranbrook.edu>',
+    cc: '',
+    subject: 'Thank you for your purchases.'
+}, function(err, message) {
+    console.log(err || message);
+});
+*/
 function createWindow() {
     // Create the browser window.
     win = new BrowserWindow({width: 800, height: 600, frame: true, show: false})
@@ -107,25 +134,50 @@ function createWindow() {
 }
 
 function runPurchasesDatabase() {
-    var dbPath = path.join(__dirname, './db/records.json');
-    var db = new Datastore({filename: dbPath, autoload: true});
+    // var dbPath = path.join(__dirname, './db/records.json');
+    // var db = new Datastore({filename: dbPath, autoload: true});
     db.count({}, function(err, count) {
         // test if db working
         console.log(count, 'items');
     });
     ipc.on('saveToDB', (event, data) => {
         child.hide()
-        var newItem = {
-            clubName: data['club'],
-            id: data['id'],
-            amount: data['amount'],
-            date_created: moment().format('MMMM Do YYYY, h:mm:ss a')
-        }
-        db.insert(newItem, function(err, doc) {
-            console.log('Inserted $', doc.amount, 'for ', doc.clubName, ' by ', doc.id)
+        dbStdnt.find({"id": data['id']}, function(err, doc){
+          console.log(doc)
+          if (doc.length != 0) {
+            var name = doc[0].firstName +' '+ doc[0].lastName
+            console.log(name)
+            var newItem = {
+                clubName: data['club'],
+                id: data['id'],
+                amount: data['amount'],
+                date_created: moment().format('MMMM Do YYYY, h:mm:ss a'),
+                purchaseName: name
+            }
+            db.insert(newItem, function(err, doc) {
+                console.log(doc.purchaseName,'inserted $', doc.amount, 'for ', doc.clubName, ' by ', doc.id)
+            })
+            var confText = "Thank you for your purchases at the Bake Sale.\n\nDetails: " + newItem.purchaseName + ' donated $'+ newItem.amount+ ' to '+ newItem.clubName
+            var emailAddress = doc[0].firstName + ' <' + doc[0].email + '>'
+            server.send({
+                text: confText,
+                from: 'Cranbrook Bake Sale <cksalereceipt@gmail.com>',
+                to: emailAddress,
+                cc: '',
+                subject: 'Thank you for your purchases.'
+            }, function(err, message) {
+                console.log(err || message);
+            });
+            win.webContents.send('clear')
+            win.show()
+          }
+          else{
+            console.log(err)
+            win.webContents.send('clear')
+            win.show()
+            win.webContents.send('noStdntError')
+          }
         })
-        win.webContents.send('clear')
-        win.show()
     });
     ipc.on('clearAllData', (event) => {
         db.remove({}, {
@@ -164,20 +216,22 @@ function runPurchasesDatabase() {
 }
 
 function runStudentsDatabase() {
-    var dbPath = path.join(__dirname, './db/students.json');
-    var dbStdnt = new Datastore({filename: dbPath, autoload: true});
+    // var dbPath = path.join(__dirname, './db/students.json');
+    // var dbStdnt = new Datastore({filename: dbPath, autoload: true});
     dbStdnt.count({}, function(err, count) {
         console.log(count, 'students in database.');
     });
     ipc.on('updateStudentDB', (function(event, data) {
-        dbStdnt.remove({},{multi: true}, function(err){})
+        dbStdnt.remove({}, {
+            multi: true
+        }, function(err) {})
         var options = {
             delimiter: ',',
             quote: '"'
         };
         var jsonObj = csv2json.toSchemaObject(data, options)
         for (var i = 0; i < jsonObj.length; i++) {
-            dbStdnt.insert(jsonObj[i], function(err){})
+            dbStdnt.insert(jsonObj[i], function(err) {})
         }
         dbStdnt.count({}, function(err, count) {
             console.log(count, 'students in database after update.');
@@ -217,6 +271,3 @@ app.on('activate', () => {
         createWindow()
     }
 })
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
