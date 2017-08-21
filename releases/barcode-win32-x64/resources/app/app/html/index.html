@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Bake Sale</title>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+
+  <style>
+    #app {
+      position: relative;
+    }
+    .logoImage {
+      width: 20%;
+      height: 20%;
+    }
+    .header {
+      position: relative;
+      font-family: "Segoe UI";
+      font-weight: 100;
+      text-align: center;
+    }
+    .cName {
+        font-size: 2.5em;
+    }
+    .formDiv {
+      text-align: center;
+      position: relative;
+    }
+    .superuserBtn {
+      margin-top: 50px;
+      margin-left: 18px;
+      position: relative;
+      float: left;
+      display: inline-block;
+    }
+    .changeBtn {
+      margin-top: 50px;
+      margin-right: 18px;
+      margin-left: 18px;
+      position: relative;
+      float: right;
+      bottom: 0;
+      display: inline;
+    }
+    .exportBtn {
+      margin-top: 50px;
+      position: relative;
+      float: right;
+      bottom: 0;
+      display: inline;
+      margin-right: 2px;
+    }
+    .submitBtn {
+      position: relative;
+      margin-top: 18px;
+    }
+    .submitEnabled {
+      background-color: green;
+    }
+
+    .textInput {
+      border-width: 2px;
+      border-style: solid;
+      border-color: rgba(148, 148, 148, 1);
+      padding: 2px 10px 3px 10px;
+      line-height: 23px;
+      font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 100;
+      color: #000000;
+      margin-bottom: 18px;
+      margin-top: 18px;
+      background: rgba(255, 255, 255, 0.35);
+    }
+    .textInput:hover {
+      border-color: rgba(100, 100, 100, 1);
+      background: rgba(255, 255, 255, .5);
+    }
+    .textInput:focus {
+      outline:none;
+      border-color: rgba(0, 120, 215, 1);
+      background: rgba(255, 255, 255, 1);
+    }
+  </style>
+
+  <script>
+    // You can also require other files to run in this process
+    require('../compiled/renderer-bundle.js')
+  </script>
+</html>
